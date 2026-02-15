@@ -27,39 +27,32 @@
       </aside>
 
       <main class="main">
-        <h1 class="title">Sana özel bir sürpriz</h1>
-        <p class="subtitle">Seçeneklerden birini seç — Galeri, Oyun veya Sürpriz</p>
+    <div id="homePanel">
+        <h1 class="playfair">Hoş Geldin Gülçin'im</h1>
+        <p>Senin için hazırladığım küçük dünyaya hoş geldin...</p>
+    </div>
 
-        <section id="panel" class="panel">
-          <div id="homePanel">Hoş geldin — menüden bir bölüm seç.</div>
+    <div id="galleryPanel" style="display:none;">
+        <h2 class="playfair" style="text-align:center; color:#ff69b4;">Anılarımız</h2>
+        <div id="galleryGrid" class="gallery-grid"></div>
+    </div>
 
-          <div id="galleryPanel" style="display:none">
-            <div class="grid" id="galleryGrid"></div>
-          </div>
-
-          <div id="lovePanel" style="display:none">
-            <h3>Sevgi Barı Oyunu</h3>
-            <div class="attempts-display">Kalan Hak: <span id="attempts-count">9999</span></div>
-            <div class="love-panel-grid" style="margin-top:8px;display:flex;gap:12px;align-items:flex-start">
-              <div class="love-left" style="min-width:220px">
-                <div class="bar-holder">
-                  <div class="love-bar-wrapper">
-                    <div id="love-bar-fill" class="love-bar-fill"></div>
-                    <div id="record-marker" class="record-marker" aria-hidden="true"></div>
-                  </div>
-                </div>
-                <div id="message-display" class="message-display">Başlamak için tıkla veya Space.</div>
-              </div>
-              <div class="love-side" id="loveSide">
-                <div id="loveSideContent"
-                  style="border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);padding:10px;min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column">
-                  <div style="font-weight:700;font-size:1.1rem">Muhammet → Gülçin</div>
-                  <div id="loveSidePhrase" style="color:var(--muted);margin-top:6px">Canım eşim, bu sayfa sana özel.
-                  </div>
-                </div>
-              </div>
+    <div id="surprisePanel" style="display:none;">
+        <div class="slideshow-container">
+            <div id="slideFrame" class="slide-frame">
+                <img id="slideImage" src="" alt="Gülçin">
+                <video id="slideVideo" src="" style="display:none;" controls></video>
+                <div id="slideCaption" class="slide-caption"></div>
             </div>
-          </div>
+            <div class="slide-controls">
+                <button id="prevBtn" class="btn alt">Önceki</button>
+                <button id="nextBtn" class="btn primary">Sonraki</button>
+                <button id="closeSurprise" class="btn alt">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    </main>
 
           <div id="flappyPanel" style="display:none">
             <canvas id="flappyCanvas" width="320" height="480"></canvas>
