@@ -1,51 +1,56 @@
-:root { --pink: #ff69b4; --dark: #050505; }
+:root { --pink: #ff4d94; --gold: #ffd700; --dark: #020202; }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; height: 100vh; }
-.playfair { font-family: 'Playfair Display', serif; color: var(--pink); }
+body { background: var(--dark); color: #fff; font-family: 'Poppins', sans-serif; overflow: hidden; height: 100vh; }
 
 /* Arka Plan */
-.night-bg { position: fixed; inset: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); z-index: -2; }
-.moon { position: fixed; top: 15px; right: 15px; font-size: 1.8rem; z-index: 10; }
-.firefly { position: fixed; width: 3px; height: 3px; background: #ffffbb; border-radius: 50%; z-index: -1; animation: move linear infinite; }
+.night-bg { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a0a1f 0%, #000 100%); z-index: -3; }
+.moon { position: fixed; top: 15px; right: 15px; font-size: 1.8rem; text-shadow: 0 0 10px #fff; z-index: 5; }
+
+/* Çiçek Animasyonu (Tam Boy) */
+.flower-full-size { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: -1; opacity: 0.6; pointer-events: none; }
+.flower { position: relative; width: 100px; height: 300px; animation: flower-sway 4s ease-in-out infinite; }
+.f-stem { width: 4px; height: 200px; background: #2f4f2f; margin: 0 auto; border-radius: 2px; }
+.f-petal { position: absolute; top: -10px; left: 50%; width: 40px; height: 50px; background: var(--pink); border-radius: 50% 50% 10% 10%; transform-origin: bottom center; opacity: 0.9; }
+.f-petal--1 { transform: translateX(-50%) rotate(0deg); }
+.f-petal--2 { transform: translateX(-50%) rotate(90deg); }
+.f-petal--3 { transform: translateX(-50%) rotate(180deg); }
+.f-petal--4 { transform: translateX(-50%) rotate(270deg); }
+@keyframes flower-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
 /* Layout */
-.app-container { display: flex; height: 100vh; position: relative; z-index: 1; }
-.sidebar { width: 220px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
-.brand { font-size: 1.2rem; font-weight: 700; color: var(--pink); margin-bottom: 20px; }
-.nav-menu { display: flex; flex-direction: column; gap: 10px; }
-.nav-btn { padding: 12px; border: none; border-radius: 8px; background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; text-align: left; }
-.nav-btn.primary { background: var(--pink); color: white; }
+.app-container { display: flex; height: 100vh; position: relative; z-index: 10; }
+.sidebar { width: 200px; background: rgba(0,0,0,0.85); padding: 20px; border-right: 1px solid #222; }
+.nav-menu { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+.nav-btn { padding: 12px; border: 1px solid #444; border-radius: 30px; background: transparent; color: #fff; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
+.nav-btn.accent { background: var(--pink); border: none; font-weight: 600; box-shadow: 0 4px 15px rgba(255, 77, 148, 0.4); }
 
-.content-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
-.panel { display: none; width: 100%; text-align: center; }
-.panel.active { display: block; animation: fadeIn 0.4s; }
+/* Yazı Belirginleştirme */
+.main-title { font-size: 3rem; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(255, 77, 148, 0.8); }
+.sub-title { font-size: 1.1rem; color: #ccc; }
 
-/* Sevgi Ölçer Mobil Uyumlu Yan Yana */
-.love-wrapper { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 15px; width: 100%; }
-.video-container { width: 160px; height: 260px; border-radius: 15px; border: 2px solid var(--pink); position: relative; overflow: hidden; background: #000; }
-.video-container video { width: 100%; height: 100%; object-fit: cover; }
-.love-quote { position: absolute; top: 0; left: 0; width: 100%; background: rgba(0,0,0,0.6); color: #ffc0cb; font-size: 0.75rem; padding: 10px; opacity: 0; transition: 0.5s; z-index: 5; }
+/* SEVGİ ÖLÇER - MOBİL YAN YANA SIKIŞTIRILMIŞ */
+.love-layout { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 5px; }
+.mini-video-box { width: 120px; height: 200px; border-radius: 12px; overflow: hidden; border: 2px solid var(--pink); position: relative; }
+.mini-video-box video { width: 100%; height: 100%; object-fit: cover; }
+.status-bubble { position: absolute; bottom: 5px; width: 90%; left: 5%; background: rgba(0,0,0,0.7); font-size: 0.65rem; border-radius: 5px; padding: 4px; opacity: 0; }
 
-.meter-bg { width: 40px; height: 200px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 20px; position: relative; overflow: hidden; }
-#meterFill { position: absolute; bottom: 0; width: 100%; background: var(--pink); height: 0%; }
+.v-bar { width: 30px; height: 160px; background: #111; border: 2px solid #333; border-radius: 15px; position: relative; overflow: hidden; }
+#meterFill { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, var(--pink), #ff99cc); height: 0%; transition: height 0.1s; }
+.tap-text { font-size: 0.7rem; color: var(--pink); font-weight: bold; margin-top: 5px; }
 
-/* Galeri ve Slayt */
-.grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 70vh; overflow-y: auto; padding: 10px; }
-.grid-item { aspect-ratio: 1/1; border-radius: 8px; overflow: hidden; border: 1px solid #222; }
-.grid-item img { width: 100%; height: 100%; object-fit: cover; }
-.media-frame { width: 280px; height: 280px; border: 3px solid var(--pink); border-radius: 20px; overflow: hidden; position: relative; margin: 0 auto; }
-.media-frame img, .media-frame video { width: 100%; height: 100%; object-fit: cover; }
-.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 10px; font-size: 0.8rem; }
+/* ŞIK BUTONLAR */
+.stylish-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
+.round-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: #333; color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.round-btn.next { background: var(--pink); box-shadow: 0 4px 10px rgba(255,77,148,0.5); }
+.exit-btn { margin-top: 20px; background: transparent; border: 1px solid #555; color: #888; padding: 5px 15px; border-radius: 20px; cursor: pointer; }
 
-/* Flappy */
-#flappyCanvas { background: rgba(0,0,0,0.3); border: 2px solid #333; border-radius: 10px; max-width: 90vw; max-height: 50vh; }
-
-@media (max-width: 768px) {
+/* MOBİL AYARLAR */
+@media (max-width: 600px) {
     .app-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; flex-direction: row; padding: 10px; }
-    .nav-menu { flex-direction: row; overflow-x: auto; width: 100%; }
-    .nav-btn { white-space: nowrap; font-size: 0.75rem; padding: 8px 12px; }
-    .brand, .moon { display: none; }
+    .sidebar { width: 100%; height: auto; padding: 10px; }
+    .nav-menu { flex-direction: row; overflow-x: auto; margin: 0; padding-bottom: 5px; }
+    .nav-btn { font-size: 0.7rem; padding: 8px 12px; }
+    .main-title { font-size: 1.8rem; }
+    .mini-video-box { width: 110px; height: 180px; }
+    .v-bar { height: 140px; }
 }
-@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-@keyframes move { from {transform: translateY(100vh);} to {transform: translateY(-10vh);} }
