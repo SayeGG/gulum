@@ -25,8 +25,8 @@
 
     <main class="content-area">
       <div id="homePanel" class="panel active">
-        <h1 class="playfair">Seni Çok Seviyorum</h1>
-        <p>Gülçin'im, senin için hazırladığım dünyaya hoş geldin...</p>
+        <h1 class="playfair">Seni Çok Seviyorum Gül'üm</h1>
+        <p>Senin için hazırladığım bu dünyayı menüden keşfet...</p>
       </div>
 
       <div id="surprisePanel" class="panel">
@@ -50,6 +50,24 @@
       </div>
 
       <div id="lovePanel" class="panel">
-        <div class="love-layout">
-          <div class="video-side">
-            <div id="
+        <div class="love-wrapper">
+          <div class="video-container">
+            <div id="loveQuote" class="love-quote">Seni Seviyorum</div>
+            <video src="media/gulobebek.mp4" autoplay loop muted playsinline id="loveVideo"></video>
+          </div>
+          <div class="meter-container">
+            <div class="meter-bg"><div id="meterFill"></div></div>
+            <p id="loveStatus">BAS!</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="flappyPanel" class="panel">
+        <canvas id="flappyCanvas"></canvas>
+        <p class="game-hint">Zıplamak için Ekrana Dokun!</p>
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
