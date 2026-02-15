@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="not-loaded">
+  <div class="night-bg"></div>
+  <div class="fireflies"></div>
+  <div class="moon">🌙✨</div>
+
   <div class="app-container">
     <aside class="sidebar">
       <div class="brand">Gülçin & Muhammet</div>
@@ -17,13 +21,13 @@
         <button class="nav-btn" data-panel="love">💖 Sevgi Ölçer</button>
         <button class="nav-btn" data-panel="flappy">🎮 Flappy Gülçin</button>
       </nav>
-      <div class="footer-note">Seni Seviyorum Gül'üm</div>
+      <div class="footer-note">Sonsuz Aşkla...</div>
     </aside>
 
     <main class="content-area">
       <div id="homePanel" class="panel active">
-        <h1 class="playfair">Hoş Geldin Gülçin'im</h1>
-        <p>Senin için hazırladığım küçük dünyaya hoş geldin. Menüden keşfetmeye başlayabilirsin...</p>
+        <h1 class="playfair">Seni Çok Seviyorum Gülçin'im</h1>
+        <p>Senin için hazırladığım bu gece huzurunda menüden gezinebilirsin...</p>
       </div>
 
       <div id="surprisePanel" class="panel">
@@ -34,8 +38,8 @@
             <div id="mediaCaption" class="caption"></div>
           </div>
           <div class="controls">
-            <button id="prevBtn" class="ctrl-btn">⬅️ Geri</button>
-            <button id="nextBtn" class="ctrl-btn primary">İleri ➡️</button>
+            <button id="prevBtn" class="ctrl-btn">⬅️</button>
+            <button id="nextBtn" class="ctrl-btn primary">İleri</button>
           </div>
           <button id="closeBtn" class="close-btn">❌ Kapat</button>
         </div>
@@ -48,17 +52,18 @@
 
       <div id="lovePanel" class="panel">
         <div class="love-layout">
-          <div id="loveVideoContainer"></div>
-          <div class="love-game">
+          <div class="video-side">
+            <video src="media/gulobebek.mp4" autoplay loop muted playsinline id="loveVideo"></video>
+          </div>
+          <div class="game-side">
             <div class="meter-bg"><div id="meterFill"></div></div>
-            <p id="loveStatus">Ölçmek için tıkla/bas!</p>
+            <p id="loveStatus">Ölçmek için BAS!</p>
           </div>
         </div>
       </div>
 
       <div id="flappyPanel" class="panel">
         <canvas id="flappyCanvas"></canvas>
-        <p class="hint">Uçurmak için ekrana dokun!</p>
       </div>
     </main>
   </div>
