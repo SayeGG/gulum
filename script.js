@@ -1,11 +1,10 @@
 window.addEventListener('load', () => {
-    // Sayfa Yükleme Animasyonu
+    // Giriş Animasyonu
     setTimeout(() => document.body.classList.remove("not-loaded"), 500);
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     let lastInputTime = 0;
 
-    // --- ÖZEL VERİLER ---
+    // --- ÖZEL VERİLER (1-16 arası resimler + 1 video) ---
     const romantikSozler = [
         "Gülüşün cennetten bir köşe gibi gülüm...", "Her bakışında yeniden aşık oluyorum.",
         "Dünyam seninle daha renkli, hayatımın anlamı.", "Gülçin'im, kalbimin tek sahibi...",
@@ -25,20 +24,32 @@ window.addEventListener('load', () => {
 
     // --- PANEL YÖNETİMİ ---
     function showPanel(id) {
-        document.querySelectorAll('.main > div, #panel > div').forEach(p => p.style.display = 'none');
-        const target = document.getElementById(id + 'Panel') || document.getElementById(id);
-        if (target) {
-            target.style.display = 'block';
+        // Tüm olası içerik alanlarını gizle
+        const targets = ['home', 'gallery', 'love', 'flappy', 'galleryPanel', 'lovePanel', 'flappyPanel'];
+        targets.forEach(t => {
+            const el = document.getElementById(t);
+            if (el) el.style.display = 'none';
+        });
+
+        // Hedef paneli göster
+        const activePanel = document.getElementById(id + 'Panel') || document.getElementById(id);
+        if (activePanel) {
+            activePanel.style.display = 'block';
             if (id === 'gallery') buildGallery();
             if (id === 'love') { loadLoveContent(); resetLoveGame(); }
             if (id === 'flappy') { resizeFlappy(); resetFlappy(); }
         }
     }
 
+    // Buton Dinleyicileri (Masaüstü ve Mobil için en garanti yol)
     document.querySelectorAll('[data-target]').forEach(btn => {
-        btn.onclick = (e) => { e.stopPropagation(); showPanel(btn.getAttribute('data-target')); };
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPanel(btn.getAttribute('data-target'));
+        });
     });
 
+    // Sürpriz Butonu
     document.getElementById('btnSurprise')?.addEventListener('click', () => {
         showPanel('gallery');
         createConfetti();
@@ -46,25 +57,25 @@ window.addEventListener('load', () => {
 
     // --- GALERİ ---
     function buildGallery() {
-        const gal = document.getElementById('galleryPanel');
+        const gal = document.getElementById('galleryPanel') || document.getElementById('gallery');
         if(!gal) return;
-        gal.innerHTML = '<h2 class="playfair" style="text-align:center; color:#ff69b4;">Sana Dair Her Şey...</h2><div class="gallery-grid"></div>';
-        const grid = gal.querySelector('.gallery-grid');
-        grid.style.cssText = "display:grid; grid-template-columns:1fr; gap:25px; padding:15px;";
+        gal.innerHTML = '<h2 style="text-align:center; color:#ff69b4; font-family:serif;">Gülçin & Muhammet</h2><div id="grid-inner"></div>';
+        const grid = gal.querySelector('#grid-inner');
+        grid.style.cssText = "display:grid; grid-template-columns:1fr; gap:20px; padding:15px; overflow-y:auto; max-height:80vh;";
 
         mediaFiles.forEach(file => {
             const card = document.createElement('div');
-            card.style.cssText = "background:#111; border-radius:20px; overflow:hidden; border:1px solid #ff69b4; box-shadow: 0 5px 15px rgba(255,105,180,0.3);";
+            card.style.cssText = "background:#111; border-radius:15px; overflow:hidden; border:1px solid #ff69b4;";
             if(file.type === 'image') {
-                card.innerHTML = `<img src="${file.src}" style="width:100%; display:block;"><p style="padding:15px; font-style:italic; color:#ffc0cb; text-align:center; font-size:1.1rem;">${file.text}</p>`;
+                card.innerHTML = `<img src="${file.src}" style="width:100%; display:block;"><p style="padding:15px; color:#ffc0cb; text-align:center;">${file.text}</p>`;
             } else {
-                card.innerHTML = `<video src="${file.src}" controls style="width:100%;"></video><p style="padding:15px; color:#ffc0cb; text-align:center; font-weight:bold;">${file.text}</p>`;
+                card.innerHTML = `<video src="${file.src}" controls style="width:100%;"></video><p style="padding:15px; color:#ffc0cb; text-align:center;">${file.text}</p>`;
             }
             grid.appendChild(card);
         });
     }
 
-    // --- SEVGİ BARI (HIZLI VE AKICI) ---
+    // --- SEVGİ BARI ---
     const barFill = document.getElementById('love-bar-fill');
     const loveMsg = document.getElementById('message-display');
     const loveSide = document.getElementById('loveSideContent');
@@ -73,12 +84,12 @@ window.addEventListener('load', () => {
     function resetLoveGame() {
         loveVal = 0; loveRunning = false;
         if(barFill) barFill.style.transform = `scaleY(0)`;
-        loveMsg.innerHTML = "Gül'üm seni ne kadar seviyor?<br>Öğrenmek için dokun!";
+        if(loveMsg) loveMsg.innerHTML = "Gül'üm seni ne kadar seviyor?<br>Öğrenmek için dokun!";
     }
 
     function loveTick() {
         if (!loveRunning) return;
-        loveVal += (2.2 + (loveVal / 40)) * loveDir; // Daha oyunsu ve hızlı
+        loveVal += (2.5 + (loveVal / 30)) * loveDir;
         if (loveVal >= 100) { loveVal = 100; loveDir = -1; }
         else if (loveVal <= 0) { loveVal = 0; loveDir = 1; }
         if (barFill) barFill.style.transform = `scaleY(${loveVal / 100})`;
@@ -88,24 +99,52 @@ window.addEventListener('load', () => {
     function loadLoveContent() {
         if (loveSide) {
             loveSide.innerHTML = `
-                <div id="love-status" style="color:#ff69b4; font-weight:bold; font-size:1.2rem; margin-bottom:15px; text-align:center;">Seni dünyalar kadar seviyorum Gülçin'im!</div>
-                <video src="media/gulobebek.mp4" autoplay muted loop playsinline style="width:100%; border-radius:15px; border:2px solid #ff69b4;"></video>
+                <div id="love-status" style="color:#ff69b4; font-weight:bold; margin-bottom:10px; text-align:center;">Seni dünyalar kadar seviyorum!</div>
+                <video src="media/gulobebek.mp4" autoplay muted loop playsinline style="width:100%; border-radius:10px;"></video>
             `;
         }
     }
 
-    // --- FLAPPY GÜLÇİN (YUVARLAK KARAKTER VE BLOKLAR) ---
+    // --- FLAPPY GÜLÇİN (YUVARLAK) ---
     const canvas = document.getElementById('flappyCanvas');
     let ctx, flappy = { running: false, pipes: [] };
-    const birdImg = new Image(); 
-    birdImg.src = 'media/flappy_gulcin.png'; // Senin logon
+    const birdImg = new Image(); birdImg.src = 'media/flappy_gulcin.png';
 
     function resizeFlappy() {
         if (!canvas) return;
-        canvas.width = canvas.parentElement.clientWidth || 350;
-        canvas.height = 500;
+        canvas.width = canvas.parentElement.clientWidth || 320;
+        canvas.height = 450;
         ctx = canvas.getContext('2d');
     }
 
     function resetFlappy() {
-        flappy = { y: 250, vy: 0
+        flappy = { y: 200, vy: 0, g: 0.3, score: 0, running: false, pipes: [], timer: 0 };
+        drawFlappy();
+    }
+
+    function drawFlappy() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Yuvarlak Karakter
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(65, flappy.y + 15, 25, 0, Math.PI * 2);
+        ctx.clip();
+        if(birdImg.complete) ctx.drawImage(birdImg, 40, flappy.y - 10, 50, 50);
+        else { ctx.fillStyle = "#ff69b4"; ctx.fill(); }
+        ctx.restore();
+
+        flappy.pipes.forEach(p => {
+            ctx.fillStyle = "#4ade80";
+            ctx.fillRect(p.x, 0, 50, p.top);
+            ctx.fillRect(p.x, p.top + 160, 50, canvas.height);
+        });
+        ctx.fillStyle = "white"; ctx.fillText("Skor: " + flappy.score, 20, 30);
+    }
+
+    function flappyTick() {
+        if (!flappy.running) return;
+        flappy.vy += flappy.g; flappy.y += flappy.vy; flappy.timer++;
+        if (flappy.timer % 90 === 0) flappy.pipes.push({ x: canvas.width, top: Math.random() * (canvas.height - 250) + 50 });
+        flappy.pipes.forEach(p => {
+            p.x -= 3;
+            if (65+20 > p.x && 45 < p.x+50 && (flappy.y < p.top || flappy.y+30 > p.top+160))
