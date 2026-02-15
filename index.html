@@ -1,130 +1,67 @@
 <!doctype html>
 <html lang="tr">
-
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ff69b4">
-  <title>Canım Gülçin — Sürpriz</title>
-  <link rel="manifest" href="manifest.json">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Gülçin & Muhammet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body class="not-loaded">
-  <div class="app">
-    <div class="card">
-      <aside class="sidebar">
-        <div class="brand">Canım Gülçin 💖</div>
-        <button class="btn primary" id="btnSurprise">Sürprizi Başlat</button>
-        <button class="btn" data-target="gallery">Galeri</button>
-        <button class="btn" data-target="love">Sevgi Oyunu</button>
-        <button class="btn" data-target="flappy">Flappy</button>
-        <div style="flex:1"></div>
-        <div class="muted">© 2026</div>
-      </aside>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="brand">Gülçin & Muhammet</div>
+      <nav class="nav-menu">
+        <button class="nav-btn primary" id="startSurprise">🎁 Sürprizi Başlat</button>
+        <button class="nav-btn" data-panel="gallery">🖼️ Anılarımız</button>
+        <button class="nav-btn" data-panel="love">💖 Sevgi Ölçer</button>
+        <button class="nav-btn" data-panel="flappy">🎮 Flappy Gülçin</button>
+      </nav>
+      <div class="footer-note">Seni Seviyorum Gül'üm</div>
+    </aside>
 
-      <main class="main">
-    <div id="homePanel">
+    <main class="content-area">
+      <div id="homePanel" class="panel active">
         <h1 class="playfair">Hoş Geldin Gülçin'im</h1>
-        <p>Senin için hazırladığım küçük dünyaya hoş geldin...</p>
-    </div>
+        <p>Senin için hazırladığım küçük dünyaya hoş geldin. Menüden keşfetmeye başlayabilirsin...</p>
+      </div>
 
-    <div id="galleryPanel" style="display:none;">
-        <h2 class="playfair" style="text-align:center; color:#ff69b4;">Anılarımız</h2>
-        <div id="galleryGrid" class="gallery-grid"></div>
-    </div>
-
-    <div id="surprisePanel" style="display:none;">
-        <div class="slideshow-container">
-            <div id="slideFrame" class="slide-frame">
-                <img id="slideImage" src="" alt="Gülçin">
-                <video id="slideVideo" src="" style="display:none;" controls></video>
-                <div id="slideCaption" class="slide-caption"></div>
-            </div>
-            <div class="slide-controls">
-                <button id="prevBtn" class="btn alt">Önceki</button>
-                <button id="nextBtn" class="btn primary">Sonraki</button>
-                <button id="closeSurprise" class="btn alt">Kapat</button>
-            </div>
-        </div>
-    </div>
-
-    </main>
-
-          <div id="flappyPanel" style="display:none">
-            <canvas id="flappyCanvas" width="320" height="480"></canvas>
-            <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-              <label for="flappyDifficulty" style="color:var(--muted);font-weight:600">Zorluk:</label>
-              <select id="flappyDifficulty" style="padding:6px;border-radius:6px">
-                <option value="easy">Kolay</option>
-                <option value="medium">Orta</option>
-                <option value="hard">Zor</option>
-              </select>
-              <div style="flex:1"></div>
-              <div style="display:flex;gap:8px"><button class="btn" id="flappyStart">Başla</button><button class="btn"
-                  id="flappyStop">Dur</button></div>
-            </div>
-            <div id="flappyInfo" style="color:var(--muted);margin-top:8px">Space veya tıklama ile zıpla.</div>
+      <div id="surprisePanel" class="panel">
+        <div class="slideshow">
+          <div class="media-frame">
+            <img id="mainImage" src="" alt="Gülçin">
+            <video id="mainVideo" src="" style="display:none;" controls playsinline></video>
+            <div id="mediaCaption" class="caption"></div>
           </div>
-
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <!-- Slide modal -->
-  <div class="modal" id="slideModal" style="display:none">
-    <div class="frame">
-      <img id="slideImage" src="" alt="">
-      <div class="overlayText" id="slideCaption"></div>
-      <div class="phrase" id="slidePhrase"></div>
-      <div class="controls">
-        <button class="btn" id="prevSlide">Önceki</button>
-        <button class="btn primary" id="closeSlide">Kapat</button>
-        <button class="btn" id="nextSlide">Sonraki</button>
+          <div class="controls">
+            <button id="prevBtn" class="ctrl-btn">⬅️ Geri</button>
+            <button id="nextBtn" class="ctrl-btn primary">İleri ➡️</button>
+          </div>
+          <button id="closeBtn" class="close-btn">❌ Kapat</button>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Media and Surprise modals expected by script.js -->
-  <div id="media-container" class="modal" style="display:none">
-    <div class="frame">
-      <img id="media-image" src="" style="display:none;max-width:80vw;max-height:60vh;border-radius:8px" />
-      <video id="media-video" controls style="display:none;max-width:80vw;max-height:60vh;border-radius:8px"></video>
-      <div style="margin-top:8px"><button id="media-close" class="btn alt">Kapat</button></div>
-    </div>
-  </div>
-
-  <div id="surprise-modal" class="modal" style="display:none">
-    <div class="frame" style="text-align:center">
-      <h2>Bir Sürpriz Var 🌸</h2>
-      <p style="color:var(--muted)">Bu sürprizi açmak ister misin?</p>
-      <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
-        <button id="surprise-open" class="btn primary">Sürprizi Aç</button>
-        <button id="surprise-close" class="btn alt">Kapat</button>
+      <div id="galleryPanel" class="panel">
+        <h2 class="playfair">Anılar Galerisi</h2>
+        <div id="galleryGrid" class="grid-container"></div>
       </div>
-    </div>
+
+      <div id="lovePanel" class="panel">
+        <div class="love-layout">
+          <div id="loveVideoContainer"></div>
+          <div class="love-game">
+            <div class="meter-bg"><div id="meterFill"></div></div>
+            <p id="loveStatus">Ölçmek için tıkla/bas!</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="flappyPanel" class="panel">
+        <canvas id="flappyCanvas"></canvas>
+        <p class="hint">Uçurmak için ekrana dokun!</p>
+      </div>
+    </main>
   </div>
-
-  <div class="fireflies" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none"></div>
-
-  <script>
-    // Localhost: temiz çalışma için kayıtlı service worker'ları ve cache'leri kaldır
-    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => { });
-      }
-      if ('caches' in window) {
-        caches.keys().then(keys => keys.forEach(k => caches.delete(k))).catch(() => { });
-      }
-      console.log('Local cleanup: service workers & caches cleared (localhost).');
-    }
-  </script>
   <script src="script.js"></script>
-  <script src="app.js"></script>
 </body>
-
 </html>
