@@ -4,53 +4,60 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Gülçin & Muhammet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="anime-bg"></div> <div class="app-wrapper">
-        <aside class="nav-bar">
-            <button class="menu-btn active" data-id="home">🏠 Ana Sayfa</button>
-            <button class="menu-btn" data-id="surprise">🎁 Sürpriz</button>
-            <button class="menu-btn" data-id="love">💖 Sevgi Ölçer</button>
-            <button class="menu-btn" data-id="game">🎮 Oyun</button>
-        </aside>
+    <div class="anime-stars"></div>
+    <div class="overlay"></div>
 
-        <main class="main-screen">
-            <div id="home" class="tab-content active">
-                <h1 class="glow-text">Seni Seviyorum Gülçin</h1>
-                <p>Bizim dünyamıza hoş geldin...</p>
-            </div>
+    <div class="app">
+        <nav class="navbar">
+            <button class="nav-item active" data-tab="home">🏠</button>
+            <button class="nav-item" data-tab="surprise">🎁</button>
+            <button class="nav-item" data-tab="love">💖</button>
+            <button class="nav-item" data-tab="game">🎮</button>
+        </nav>
 
-            <div id="surprise" class="tab-content">
-                <div class="media-box">
-                    <img id="mainImg" src="media/1.jpeg">
-                    <video id="mainVid" style="display:none" controls playsinline></video>
-                    <div class="slide-ctrl">
-                        <button id="prev">◀ Geri</button>
-                        <button id="next">İleri ▶</button>
+        <main class="viewport">
+            <section id="home" class="tab active">
+                <div class="hero">
+                    <h1>Gülçin'im</h1>
+                    <p>Seni Çok Seviyorum...</p>
+                </div>
+            </section>
+
+            <section id="surprise" class="tab">
+                <div class="frame-container">
+                    <div class="media-window">
+                        <img id="mainImg" src="media/1.jpeg">
+                        <video id="mainVid" style="display:none" controls playsinline></video>
+                    </div>
+                    <div class="nav-controls">
+                        <button id="prevBtn">◀</button>
+                        <button id="nextBtn" class="pink">▶</button>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div id="love" class="tab-content">
-                <div class="love-container">
-                    <div class="video-part">
-                        <div id="loveMsg" class="popup-msg">Seni Çok Seviyorum!</div>
+            <section id="love" class="tab">
+                <div class="love-split">
+                    <div class="love-video">
+                        <div id="loveQuote" class="bubble">Seni Seviyorum</div>
                         <video src="media/gulobebek.mp4" autoplay loop muted playsinline></video>
                     </div>
-                    <div class="meter-part">
-                        <div class="bar-outer"><div id="barInner"></div></div>
-                        <p id="barText">BAS!</p>
+                    <div class="love-meter">
+                        <div class="meter-track"><div id="meterFill"></div></div>
+                        <span>BAS!</span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div id="game" class="tab-content">
-                <canvas id="gameCanvas"></canvas>
-            </div>
+            <section id="game" class="tab">
+                <canvas id="flappyCvs"></canvas>
+            </section>
         </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
