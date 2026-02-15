@@ -4,63 +4,50 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Gülçin & Muhammet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="not-loaded">
-    <div class="anime-bg"></div>
-    <div class="stars"></div>
-
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="brand">Gülçin ❤️</div>
-            <nav class="nav-menu">
-                <button class="nav-btn primary" id="btnSurprise">🎁 Sürpriz</button>
-                <button class="nav-btn" data-target="gallery">🖼️ Galeri</button>
-                <button class="nav-btn" data-target="love">💖 Ölçer</button>
-                <button class="nav-btn" data-target="flappy">🎮 Oyun</button>
-            </nav>
+<body>
+    <div class="anime-bg"></div> <div class="app-wrapper">
+        <aside class="nav-bar">
+            <button class="menu-btn active" data-id="home">🏠 Ana Sayfa</button>
+            <button class="menu-btn" data-id="surprise">🎁 Sürpriz</button>
+            <button class="menu-btn" data-id="love">💖 Sevgi Ölçer</button>
+            <button class="menu-btn" data-id="game">🎮 Oyun</button>
         </aside>
 
-        <main class="main-content">
-            <div id="homePanel" class="panel active">
-                <h1 class="playfair">Seni Seviyorum</h1>
-                <p>Huzur dolu dünyamıza hoş geldin...</p>
+        <main class="main-screen">
+            <div id="home" class="tab-content active">
+                <h1 class="glow-text">Seni Seviyorum Gülçin</h1>
+                <p>Bizim dünyamıza hoş geldin...</p>
             </div>
 
-            <div id="surprisePanel" class="panel">
-                <div class="media-display">
-                    <div class="media-frame">
-                        <img id="displayImg" src="">
-                        <video id="displayVid" style="display:none" controls playsinline></video>
+            <div id="surprise" class="tab-content">
+                <div class="media-box">
+                    <img id="mainImg" src="media/1.jpeg">
+                    <video id="mainVid" style="display:none" controls playsinline></video>
+                    <div class="slide-ctrl">
+                        <button id="prev">◀ Geri</button>
+                        <button id="next">İleri ▶</button>
                     </div>
-                    <div class="nav-btns">
-                        <button id="prev" class="circle-btn">◀</button>
-                        <button id="next" class="circle-btn pink">▶</button>
-                    </div>
-                    <button id="closeMedia" class="close-text">Kapat</button>
                 </div>
             </div>
 
-            <div id="lovePanel" class="panel">
-                <div class="love-flex">
-                    <div class="vid-box">
-                        <div id="quoteBox" class="love-msg">Gül'üm..</div>
+            <div id="love" class="tab-content">
+                <div class="love-container">
+                    <div class="video-part">
+                        <div id="loveMsg" class="popup-msg">Seni Çok Seviyorum!</div>
                         <video src="media/gulobebek.mp4" autoplay loop muted playsinline></video>
                     </div>
-                    <div class="bar-box">
-                        <div class="love-bar"><div id="barFill"></div></div>
-                        <span class="btn-label">BAS!</span>
+                    <div class="meter-part">
+                        <div class="bar-outer"><div id="barInner"></div></div>
+                        <p id="barText">BAS!</p>
                     </div>
                 </div>
             </div>
 
-            <div id="galleryPanel" class="panel">
-                <div id="gGrid" class="g-grid"></div>
-            </div>
-
-            <div id="flappyPanel" class="panel">
-                <canvas id="flappyCanvas"></canvas>
+            <div id="game" class="tab-content">
+                <canvas id="gameCanvas"></canvas>
             </div>
         </main>
     </div>
