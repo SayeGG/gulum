@@ -1,0 +1,41 @@
+{
+  "name": "Sevgi Barı - Gülçin için",
+  "short_name": "Sevgi Barı",
+  "description": "İnteraktif çiçek animasyonu ve sevgi seviyesi ölçüm oyunu",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "categories": ["entertainment", "games"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23000' width='192' height='192'/><text x='96' y='120' font-size='120' fill='%23ff69b4' text-anchor='middle'>💕</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%23000' width='512' height='512'/><text x='256' y='320' font-size='300' fill='%23ff69b4' text-anchor='middle'>💕</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gülçin'e Sürpriz",
+      "short_name": "Sürpriz",
+      "description": "Gülçin için Muhammed'den Sevgililer Günü Sürprizi",
+      "url": "./",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23ff69b4' width='96' height='96'/><text x='48' y='60' font-size='60' fill='%23fff' text-anchor='middle'>▶</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
