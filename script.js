@@ -1,16 +1,16 @@
 window.addEventListener('load', () => {
-    // Gülçin'in fotoğrafını oyun karakteri yapmak için hazırlıyoruz
-    const birdImg = new Image();
-    birdImg.src = 'media/1.jpeg'; 
+    // Gülçin'in yüzü (Oyun karakteri)
+    const bird = new Image();
+    bird.src = 'media/1.jpeg'; 
 
     const media = [];
     for(let i=1; i<=16; i++) { media.push({src: `media/${i}.jpeg`}); }
     media.push({src: 'media/gulobebek.mp4', type: 'video'});
 
-    const quotes = ["Seninle her an çok özel.", "Kalbimin sahibi Gülçin...", "Gülüşün ömre bedel.", "İyiki varsın sevgilim.", "Seni her gün daha çok seviyorum."];
+    const quotes = ["Seni çok seviyorum!", "Sen benim her şeyimsin.", "Dünyam seninle güzel.", "İyiki varsın Gül'üm."];
     let idx = 0;
 
-    // Panel Yönetimi
+    // Panel Sistemi
     function show(id) {
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById(id + 'Panel').classList.add('active');
@@ -18,83 +18,83 @@ window.addEventListener('load', () => {
         if(id === 'flappy') startFlappy();
     }
 
-    document.querySelectorAll('[data-panel]').forEach(b => b.onclick = () => show(b.getAttribute('data-panel')));
-    document.getElementById('startSurprise').onclick = () => { idx=0; show('surprise'); updateMedia(); };
+    document.querySelectorAll('[data-target]').forEach(b => {
+        b.onclick = () => show(b.getAttribute('data-target'));
+    });
 
-    function updateMedia() {
-        const item = media[idx];
-        const iEl = document.getElementById('mainImage');
-        const vEl = document.getElementById('mainVideo');
-        if(item.type === 'video') { iEl.style.display='none'; vEl.style.display='block'; vEl.src=item.src; vEl.play(); }
-        else { vEl.style.display='none'; iEl.style.display='block'; iEl.src=item.src; }
+    document.getElementById('btnSurprise').onclick = () => { idx=0; show('surprise'); update(); };
+
+    function update() {
+        const item = media[idx], img = document.getElementById('displayImg'), vid = document.getElementById('displayVid');
+        if(item.type === 'video') { img.style.display='none'; vid.style.display='block'; vid.src=item.src; vid.play(); }
+        else { vid.style.display='none'; img.style.display='block'; img.src=item.src; }
     }
 
-    document.getElementById('nextBtn').onclick = () => { idx=(idx+1)%media.length; updateMedia(); };
-    document.getElementById('prevBtn').onclick = () => { idx=(idx-1+media.length)%media.length; updateMedia(); };
-    document.getElementById('closeBtn').onclick = () => show('home');
+    document.getElementById('next').onclick = () => { idx=(idx+1)%media.length; update(); };
+    document.getElementById('prev').onclick = () => { idx=(idx-1+media.length)%media.length; update(); };
+    document.getElementById('closeMedia').onclick = () => show('home');
 
     function buildGallery() {
-        const grid = document.getElementById('galleryGrid');
-        grid.innerHTML = '';
+        const g = document.getElementById('gGrid'); g.innerHTML = '';
         media.forEach((m, i) => {
             if(m.type !== 'video') {
-                const img = document.createElement('img');
-                img.src = m.src;
-                img.onclick = () => { idx=i; show('surprise'); updateMedia(); };
-                grid.appendChild(img);
+                const img = document.createElement('img'); img.src = m.src;
+                img.onclick = () => { idx=i; show('surprise'); update(); };
+                g.appendChild(img);
             }
         });
     }
 
     // Sevgi Ölçer
     let val = 0, active = false, raf;
-    const fill = document.getElementById('meterFill'), qBox = document.getElementById('loveQuote');
-    function run() { if(!active) return; val += 4; if(val > 100) val = 0; fill.style.height = val + '%'; raf = requestAnimationFrame(run); }
+    const fill = document.getElementById('barFill'), q = document.getElementById('quoteBox');
 
     window.onpointerdown = (e) => {
         if(!document.getElementById('lovePanel').classList.contains('active')) return;
         if(e.target.closest('.sidebar')) return;
-        if(!active) { active = true; run(); qBox.style.opacity = 0; }
-        else { active = false; cancelAnimationFrame(raf); qBox.innerText = quotes[Math.floor(Math.random()*quotes.length)] + " %" + Math.floor(val); qBox.style.opacity = 1; }
+        if(!active) {
+            active=true; q.style.opacity=0;
+            (function r(){ if(!active)return; val+=5; if(val>100)val=0; fill.style.height=val+'%'; raf=requestAnimationFrame(r); })();
+        } else {
+            active=false; cancelAnimationFrame(raf);
+            q.innerText = quotes[Math.floor(Math.random()*quotes.length)] + " %" + Math.floor(val);
+            q.style.opacity=1;
+        }
     };
 
     // Flappy Gülçin (FOTOĞRAFLI)
     function startFlappy() {
-        const c = document.getElementById('flappyCanvas');
-        const ctx = c.getContext('2d');
-        c.width = 300; c.height = 400;
-        let y = 200, v = 0, p = [], s = 0, run = true;
+        const cvs = document.getElementById('flappyCanvas');
+        const ctx = cvs.getContext('2d');
+        cvs.width = 320; cvs.height = 400;
+        let y=200, v=0, pipes=[], score=0, go=true;
 
-        function loop() {
-            if(!run) return;
-            ctx.clearRect(0,0,300,400);
+        function draw() {
+            if(!go) return;
+            ctx.clearRect(0,0,320,400);
             v += 0.25; y += v;
-            
-            // Gülçin'in resmini yuvarlak içine çizme
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(50, y, 18, 0, Math.PI * 2);
-            ctx.clip();
-            ctx.drawImage(birdImg, 32, y - 18, 36, 36);
-            ctx.restore();
-            ctx.strokeStyle = "#ff4d94"; ctx.lineWidth = 2; ctx.stroke();
 
-            if(p.length === 0 || p[p.length-1].x < 150) p.push({x:300, h:Math.random()*200+50});
-            p.forEach(pipe => {
-                pipe.x -= 2; ctx.fillStyle="#444";
-                ctx.fillRect(pipe.x, 0, 35, pipe.h);
-                ctx.fillRect(pipe.x, pipe.h+110, 35, 400);
-                if(pipe.x < 65 && pipe.x > 35 && (y < pipe.h || y > pipe.h+110)) run = false;
-                if(pipe.x === 50) s++;
+            // Gülçin'in kafasını çizme
+            ctx.save();
+            ctx.beginPath(); ctx.arc(50, y, 20, 0, Math.PI*2); ctx.clip();
+            ctx.drawImage(bird, 30, y-20, 40, 40);
+            ctx.restore();
+
+            if(pipes.length==0 || pipes[pipes.length-1].x < 170) pipes.push({x:320, h:Math.random()*200+50});
+            pipes.forEach(p => {
+                p.x -= 2; ctx.fillStyle="#444";
+                ctx.fillRect(p.x, 0, 35, p.h); ctx.fillRect(p.x, p.h+110, 35, 400);
+                if(p.x<70 && p.x>30 && (y<p.h || y>p.h+110)) go=false;
+                if(p.x==50) score++;
             });
-            p = p.filter(pipe => pipe.x > -40);
-            ctx.fillStyle="#fff"; ctx.font="16px Arial"; ctx.fillText("Puan: "+s, 10, 25);
-            if(y > 400 || y < 0) run = false;
-            if(run) requestAnimationFrame(loop);
-            else { ctx.fillStyle="#fff"; ctx.fillText("YANDIN! DOKUN", 100, 200); }
+            pipes = pipes.filter(p => p.x > -40);
+            ctx.fillStyle="#fff"; ctx.fillText("Skor: "+score, 10, 25);
+            if(y>400 || y<0) go=false;
+            if(go) requestAnimationFrame(draw);
+            else ctx.fillText("YANDIN! TIKLA", 110, 200);
         }
-        c.onpointerdown = (e) => { e.preventDefault(); if(!run) startFlappy(); else v = -5; };
-        loop();
+        cvs.onpointerdown = (e) => { e.preventDefault(); if(!go) startFlappy(); else v=-5; };
+        draw();
     }
 
     document.body.classList.remove("not-loaded");
