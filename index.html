@@ -12,59 +12,71 @@
   <div class="fireflies"></div>
   <div class="moon">🌙✨</div>
 
+  <div id="flowerContainer" class="flower-full-size">
+    <div class="flower">
+      <div class="f-wrapper">
+        <div class="f-stem"></div>
+        <div class="f-petal f-petal--1"></div>
+        <div class="f-petal f-petal--2"></div>
+        <div class="f-petal f-petal--3"></div>
+        <div class="f-petal f-petal--4"></div>
+        <div class="f-leaf f-leaf--1"></div>
+        <div class="f-leaf f-leaf--2"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="app-container">
     <aside class="sidebar">
-      <div class="brand">Gülçin & Muhammet</div>
+      <div class="brand">Canım Gül'üm</div>
       <nav class="nav-menu">
-        <button class="nav-btn primary" id="startSurprise">🎁 Sürprizi Başlat</button>
+        <button class="nav-btn accent" id="startSurprise">🎁 Sürprizi Başlat</button>
         <button class="nav-btn" data-panel="gallery">🖼️ Anılarımız</button>
         <button class="nav-btn" data-panel="love">💖 Sevgi Ölçer</button>
-        <button class="nav-btn" data-panel="flappy">🎮 Flappy Gülçin</button>
+        <button class="nav-btn" data-panel="flappy">🎮 Flappy</button>
       </nav>
     </aside>
 
     <main class="content-area">
       <div id="homePanel" class="panel active">
-        <h1 class="playfair">Seni Çok Seviyorum Gül'üm</h1>
-        <p>Senin için hazırladığım bu dünyayı menüden keşfet...</p>
+        <h1 class="playfair main-title">Seni Çok Seviyorum</h1>
+        <p class="sub-title">Senin için hazırladığım dünyaya hoş geldin...</p>
       </div>
 
       <div id="surprisePanel" class="panel">
-        <div class="slideshow">
-          <div class="media-frame">
-            <img id="mainImage" src="" alt="Gülçin">
+        <div class="slideshow-box">
+          <div class="media-container">
+            <img id="mainImage" src="">
             <video id="mainVideo" src="" style="display:none;" controls playsinline></video>
-            <div id="mediaCaption" class="caption"></div>
+            <div id="mediaCaption" class="caption-bar"></div>
           </div>
-          <div class="controls">
-            <button id="prevBtn" class="ctrl-btn">⬅️</button>
-            <button id="nextBtn" class="ctrl-btn primary">İleri</button>
+          <div class="stylish-controls">
+            <button id="prevBtn" class="round-btn">◀</button>
+            <button id="nextBtn" class="round-btn next">▶</button>
           </div>
-          <button id="closeBtn" class="close-btn">❌ Kapat</button>
+          <button id="closeBtn" class="exit-btn">Kapat</button>
+        </div>
+      </div>
+
+      <div id="lovePanel" class="panel">
+        <div class="love-layout">
+          <div class="mini-video-box">
+             <div id="loveQuote" class="status-bubble">Gülçin...</div>
+             <video src="media/gulobebek.mp4" autoplay loop muted playsinline id="loveVideo"></video>
+          </div>
+          <div class="mini-meter-box">
+            <div class="v-bar"><div id="meterFill"></div></div>
+            <span class="tap-text">BAS!</span>
+          </div>
         </div>
       </div>
 
       <div id="galleryPanel" class="panel">
-        <h2 class="playfair">Anılarımız</h2>
-        <div id="galleryGrid" class="grid-container"></div>
-      </div>
-
-      <div id="lovePanel" class="panel">
-        <div class="love-wrapper">
-          <div class="video-container">
-            <div id="loveQuote" class="love-quote">Seni Seviyorum</div>
-            <video src="media/gulobebek.mp4" autoplay loop muted playsinline id="loveVideo"></video>
-          </div>
-          <div class="meter-container">
-            <div class="meter-bg"><div id="meterFill"></div></div>
-            <p id="loveStatus">BAS!</p>
-          </div>
-        </div>
+        <div id="galleryGrid" class="grid-layout"></div>
       </div>
 
       <div id="flappyPanel" class="panel">
         <canvas id="flappyCanvas"></canvas>
-        <p class="game-hint">Zıplamak için Ekrana Dokun!</p>
       </div>
     </main>
   </div>
