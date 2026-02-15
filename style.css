@@ -1,49 +1,63 @@
-:root { --pink: #ff69b4; --dark: #0a0a0a; --glass: rgba(255, 255, 255, 0.1); }
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+:root { --pink: #ff69b4; --dark: #050505; }
+* { margin:0; padding:0; box-sizing:border-box; }
 body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; height: 100vh; }
-.playfair { font-family: 'Playfair Display', serif; color: var(--pink); margin-bottom: 10px; }
+.playfair { font-family: 'Playfair Display', serif; color: var(--pink); }
 
-.app-container { display: flex; height: 100vh; }
-.sidebar { width: 260px; background: #111; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #222; z-index: 100; }
-.brand { font-size: 1.4rem; font-weight: 700; color: var(--pink); margin-bottom: 40px; text-align: center; }
+/* ARKA PLAN VE AY */
+.night-bg {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    z-index: -2;
+}
+.moon {
+    position: fixed; top: 20px; right: 20px;
+    font-size: 2.5rem; text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    animation: float 4s ease-in-out infinite; z-index: 10;
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* ATEŞ BÖCEKLERİ */
+.firefly {
+    position: fixed; width: 4px; height: 4px; background: #ffffbb;
+    border-radius: 50%; filter: blur(1px); box-shadow: 0 0 10px #ffffbb;
+    z-index: -1; animation: move linear infinite;
+}
+
+/* ANA YAPI */
+.app-container { display: flex; height: 100vh; position: relative; z-index: 1; }
+.sidebar { width: 260px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #333; }
+.brand { font-size: 1.4rem; font-weight: 700; color: var(--pink); margin-bottom: 30px; }
 .nav-menu { display: flex; flex-direction: column; gap: 12px; }
-.nav-btn { padding: 14px; border: none; border-radius: 12px; background: var(--glass); color: #ccc; cursor: pointer; transition: 0.3s; font-weight: 600; text-align: left; }
-.nav-btn:hover { background: rgba(255,105,180,0.2); color: white; }
+.nav-btn { padding: 14px; border: none; border-radius: 12px; background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; transition: 0.3s; font-weight: 600; text-align: left; }
+.nav-btn:hover { background: rgba(255,105,180,0.3); color: white; }
 .nav-btn.primary { background: var(--pink); color: white; }
 
-.content-area { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
-.panel { display: none; width: 100%; max-width: 800px; text-align: center; animation: fadeIn 0.5s; }
-.panel.active { display: block; }
+.content-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.panel { display: none; width: 100%; max-width: 800px; text-align: center; }
+.panel.active { display: block; animation: fadeIn 0.8s; }
 
-/* Slayt Tasarımı */
-.slideshow { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.media-frame { 
-    width: 320px; height: 320px; border: 4px solid var(--pink); border-radius: 25px; 
-    overflow: hidden; position: relative; background: #000; box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-}
+/* SEVGİ ÖLÇER VE VİDEO */
+.love-layout { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.video-side { width: 250px; height: 350px; border-radius: 20px; overflow: hidden; border: 3px solid var(--pink); box-shadow: 0 0 20px var(--pink); }
+.video-side video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; } /* Çubukları gizlemek için pointer-events none */
+
+.meter-bg { width: 60px; height: 250px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 30px; position: relative; overflow: hidden; }
+#meterFill { position: absolute; bottom: 0; width: 100%; background: var(--pink); height: 0%; transition: height 0.1s; }
+
+/* DİĞERLERİ */
+.media-frame { width: 320px; height: 320px; border: 4px solid var(--pink); border-radius: 25px; overflow: hidden; position: relative; margin: 0 auto; }
 .media-frame img, .media-frame video { width: 100%; height: 100%; object-fit: cover; }
-.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 15px; font-size: 0.95rem; color: #ffc0cb; font-weight: 600; }
-.controls { display: flex; gap: 15px; }
-.ctrl-btn { padding: 12px 25px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; background: #333; color: white; }
-.close-btn { background: none; color: #777; border: none; cursor: pointer; margin-top: 10px; }
-
-/* Galeri */
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-top: 20px; }
-.grid-item { aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; border: 1px solid #333; cursor: pointer; }
+.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 10px; font-size: 0.9rem; }
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+.grid-item { aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
 .grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Sevgi Barı */
-.meter-bg { width: 70px; height: 280px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 35px; margin: 0 auto 20px; position: relative; overflow: hidden; }
-#meterFill { position: absolute; bottom: 0; width: 100%; background: var(--pink); height: 0%; transition: height 0.1s linear; }
-
-/* Mobil Ayarlar */
+/* MOBİL */
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; padding: 15px; border-bottom: 1px solid #222; }
-    .brand { margin-bottom: 15px; }
-    .nav-menu { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
-    .nav-btn { white-space: nowrap; padding: 10px 15px; font-size: 0.85rem; }
-    .media-frame { width: 280px; height: 280px; }
+    .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; }
+    .nav-menu { flex-direction: row; }
+    .brand, .footer-note, .moon { display: none; }
 }
-
 @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+@keyframes move { from {transform: translateY(100vh);} to {transform: translateY(-10vh);} }
