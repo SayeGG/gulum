@@ -3,61 +3,48 @@
 body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; height: 100vh; }
 .playfair { font-family: 'Playfair Display', serif; color: var(--pink); }
 
-/* ARKA PLAN VE AY */
-.night-bg {
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-    z-index: -2;
-}
-.moon {
-    position: fixed; top: 20px; right: 20px;
-    font-size: 2.5rem; text-shadow: 0 0 20px rgba(255,255,255,0.5);
-    animation: float 4s ease-in-out infinite; z-index: 10;
-}
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.night-bg { position: fixed; inset: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); z-index: -2; }
+.moon { position: fixed; top: 15px; right: 15px; font-size: 2rem; z-index: 10; }
+.firefly { position: fixed; width: 3px; height: 3px; background: #ffffbb; border-radius: 50%; z-index: -1; animation: move linear infinite; }
 
-/* ATEŞ BÖCEKLERİ */
-.firefly {
-    position: fixed; width: 4px; height: 4px; background: #ffffbb;
-    border-radius: 50%; filter: blur(1px); box-shadow: 0 0 10px #ffffbb;
-    z-index: -1; animation: move linear infinite;
-}
-
-/* ANA YAPI */
 .app-container { display: flex; height: 100vh; position: relative; z-index: 1; }
-.sidebar { width: 260px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #333; }
-.brand { font-size: 1.4rem; font-weight: 700; color: var(--pink); margin-bottom: 30px; }
-.nav-menu { display: flex; flex-direction: column; gap: 12px; }
-.nav-btn { padding: 14px; border: none; border-radius: 12px; background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; transition: 0.3s; font-weight: 600; text-align: left; }
-.nav-btn:hover { background: rgba(255,105,180,0.3); color: white; }
+.sidebar { width: 240px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
+.nav-menu { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.nav-btn { padding: 12px; border: none; border-radius: 10px; background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; text-align: left; font-weight: 600; }
 .nav-btn.primary { background: var(--pink); color: white; }
 
-.content-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.panel { display: none; width: 100%; max-width: 800px; text-align: center; }
-.panel.active { display: block; animation: fadeIn 0.8s; }
+.content-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 15px; overflow: hidden; }
+.panel { display: none; width: 100%; text-align: center; }
+.panel.active { display: block; animation: fadeIn 0.5s; }
 
-/* SEVGİ ÖLÇER VE VİDEO */
-.love-layout { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.video-side { width: 250px; height: 350px; border-radius: 20px; overflow: hidden; border: 3px solid var(--pink); box-shadow: 0 0 20px var(--pink); }
-.video-side video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; } /* Çubukları gizlemek için pointer-events none */
+/* SEVGİ ÖLÇER YAN YANA TASARIM */
+.love-layout { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 20px; width: 100%; }
+.video-side { width: 180px; height: 280px; border-radius: 15px; overflow: hidden; border: 2px solid var(--pink); position: relative; box-shadow: 0 0 15px var(--pink); }
+.video-side video { width: 100%; height: 100%; object-fit: cover; }
+.love-quote { position: absolute; top: 10px; left: 5px; right: 5px; background: rgba(0,0,0,0.6); padding: 5px; font-size: 0.75rem; border-radius: 5px; color: white; z-index: 2; opacity: 0; transition: 0.5s; }
 
-.meter-bg { width: 60px; height: 250px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 30px; position: relative; overflow: hidden; }
-#meterFill { position: absolute; bottom: 0; width: 100%; background: var(--pink); height: 0%; transition: height 0.1s; }
+.meter-bg { width: 45px; height: 220px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 25px; position: relative; overflow: hidden; }
+#meterFill { position: absolute; bottom: 0; width: 100%; background: var(--pink); height: 0%; }
 
 /* DİĞERLERİ */
-.media-frame { width: 320px; height: 320px; border: 4px solid var(--pink); border-radius: 25px; overflow: hidden; position: relative; margin: 0 auto; }
+.media-frame { width: 280px; height: 280px; border: 3px solid var(--pink); border-radius: 20px; overflow: hidden; position: relative; margin: 0 auto; }
 .media-frame img, .media-frame video { width: 100%; height: 100%; object-fit: cover; }
-.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 10px; font-size: 0.9rem; }
-.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-.grid-item { aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 8px; font-size: 0.8rem; }
+.grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 70vh; overflow-y: auto; }
+.grid-item { aspect-ratio: 1/1; border-radius: 8px; overflow: hidden; }
 .grid-item img { width: 100%; height: 100%; object-fit: cover; }
 
-/* MOBİL */
+#flappyCanvas { background: rgba(0,0,0,0.5); border: 2px solid #333; border-radius: 10px; max-width: 90vw; max-height: 60vh; }
+
+/* MOBİL ÖZEL */
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; }
-    .nav-menu { flex-direction: row; }
-    .brand, .footer-note, .moon { display: none; }
+    .sidebar { width: 100%; height: auto; flex-direction: row; padding: 10px; }
+    .nav-menu { flex-direction: row; overflow-x: auto; margin-top: 0; width: 100%; }
+    .nav-btn { white-space: nowrap; font-size: 0.8rem; padding: 8px 12px; }
+    .brand { display: none; }
+    .love-layout { gap: 15px; }
+    .video-side { width: 140px; height: 220px; }
 }
-@keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
 @keyframes move { from {transform: translateY(100vh);} to {transform: translateY(-10vh);} }
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
