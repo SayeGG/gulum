@@ -1,288 +1,175 @@
 window.addEventListener('load', () => {
-    // Sayfa yükleme animasyonu (Gül simgesi)
-    setTimeout(() => document.body.classList.remove("not-loaded"), 500);
-
-    // --- ÖZEL VERİLER VE SÖZLER ---
-    const romantikSozler = [
-        "Gülüşün dünyamı aydınlatıyor Gül'üm...", "Her anımda sen varsın canım eşim.",
-        "Seninle hayat bir başka güzel Gülçin'im.", "Muhammet sana her gün yeniden aşık oluyor.",
-        "Kalbimin tek sahibi, bir tanem.", "Gözlerin en güzel manzaram benim.",
-        "Seninle yaşlanmak tek hayalim Gül'üm.", "İyiki benimsin, iyiki eşimsin.",
-        "Ruhumun eşi, kalbimin neşesi...", "Gül yüzlüm, her şeyim sensin.",
-        "Ömrümün en güzel hikayesi seninle başladı.", "Sen benim sol yanım, can parçamsın.",
-        "Sonsuza kadar sadece seninle Gülçin'im.", "Hayat seninle anlam kazanıyor birtanem.",
-        "Sana olan sevgim hiç bitmeyecek Gül'üm.", "Dünyanın en güzel kalbi sende...",
-        "Gülçin & Muhammet: Sonsuz Aşk ❤️"
+    // --- VERİLER ---
+    const mediaItems = [
+        { src: 'media/1.jpeg', text: "Gülüşün dünyamı aydınlatıyor Gül'üm." },
+        { src: 'media/2.jpeg', text: "Her anımda sen varsın birtanem." },
+        { src: 'media/3.jpeg', text: "Muhammet sana her gün yeniden aşık oluyor." },
+        { src: 'media/4.jpeg', text: "Seninle hayat bir başka güzel Gülçin'im." },
+        { src: 'media/5.jpeg', text: "Kalbimin tek sahibi, canım eşim." },
+        { src: 'media/6.jpeg', text: "Gözlerin en güzel manzaram benim." },
+        { src: 'media/7.jpeg', text: "Sonsuza kadar sadece sen ve ben." },
+        { src: 'media/8.jpeg', text: "Seninle yaşlanmak hayattaki en büyük şansım." },
+        { src: 'media/9.jpeg', text: "Ruhumun eşi, kalbimin neşesi iyiki varsın." },
+        { src: 'media/10.jpeg', text: "Gül yüzlüm, her şeyim sensin." },
+        { src: 'media/11.jpeg', text: "Sana olan sevgim kelimelere sığmaz." },
+        { src: 'media/12.jpeg', text: "Ömrümün en güzel hikayesi seninle başladı." },
+        { src: 'media/13.jpeg', text: "Dünyanın en güzel kalbi sende Gülçin'im." },
+        { src: 'media/14.jpeg', text: "Hayat seninle daha anlamlı, daha renkli." },
+        { src: 'media/15.jpeg', text: "Can parçam, sol yanım, her şeyim..." },
+        { src: 'media/16.jpeg', text: "İyiki benimsin, iyiki eşimsin!" },
+        { src: 'media/gulobebek.mp4', text: "O hallerine kurban olurum Gül'üm!", type: 'video' }
     ];
 
-    const mediaFiles = [];
-    for(let i=1; i<=16; i++) { 
-        mediaFiles.push({ src: `media/${i}.jpeg`, text: romantikSozler[i-1] }); 
-    }
-    mediaFiles.push({ src: 'media/gulobebek.mp4', text: "Senin o güzel hallerine kurban olurum Gül'üm!", type: 'video' });
+    let currentIdx = 0;
 
-    // --- PANEL SİSTEMİ (TIKLAMA SORUNUNU ÇÖZEN KISIM) ---
+    // --- PANEL SİSTEMİ ---
     function showPanel(id) {
-        // Tüm panelleri kapat (main içindekiler dahil)
-        document.querySelectorAll('.main > div, #panel > div').forEach(p => p.style.display = 'none');
-        
-        const target = document.getElementById(id + 'Panel') || document.getElementById(id);
-        if (target) {
-            target.style.display = 'block';
-            if (id === 'gallery') buildGallery();
-            if (id === 'love') { resetLoveGame(); loadLoveVideo(); }
-            if (id === 'flappy') { resizeFlappy(); resetFlappy(); }
-        }
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById(id + 'Panel');
+        if (target) target.classList.add('active');
+        if (id === 'gallery') buildGallery();
     }
 
-    // Buton Dinleyicileri (Hem PC hem Mobil için en garantisi)
-    document.querySelectorAll('[data-target], #btnSurprise').forEach(btn => {
-        const handleBtn = (e) => {
-            e.preventDefault(); e.stopPropagation();
-            const target = btn.getAttribute('data-target') || 'gallery';
-            showPanel(target);
-            if(btn.id === 'btnSurprise') createConfetti();
-        };
-        btn.addEventListener('click', handleBtn);
-        btn.addEventListener('touchstart', handleBtn, { passive: false });
+    // Menü Butonları
+    document.querySelectorAll('[data-panel]').forEach(btn => {
+        btn.addEventListener('click', () => showPanel(btn.getAttribute('data-panel')));
     });
 
-    // --- GALERİ VE SÜRPRİZ SEKMESİ ---
-    function buildGallery() {
-        const gal = document.getElementById('galleryPanel') || document.getElementById('gallery');
-        if(!gal) return;
-        gal.innerHTML = '<h2 class="playfair" style="text-align:center; color:#ff69b4; margin-bottom:20px;">Gülçin\'im İçin Anılarımız</h2><div class="g-grid"></div>';
-        const grid = gal.querySelector('.g-grid');
-        grid.style.cssText = "display:grid; grid-template-columns:1fr; gap:25px; padding:10px;";
+    document.getElementById('startSurprise').addEventListener('click', () => {
+        currentIdx = 0;
+        showPanel('surprise');
+        updateSlideshow();
+    });
 
-        mediaFiles.forEach(file => {
-            const card = document.createElement('div');
-            card.style.cssText = "background:#111; border-radius:15px; overflow:hidden; border:1px solid #ff69b4;";
-            
-            if(file.type === 'video') {
-                card.innerHTML = `<video src="${file.src}" controls style="width:100%;"></video><p style="padding:15px; color:#ffc0cb; text-align:center;">${file.text}</p>`;
-            } else {
-                card.innerHTML = `<img src="${file.src}" style="width:100%; display:block;"><p style="padding:15px; color:#ffc0cb; text-align:center; font-style:italic;">${file.text}</p>`;
-            }
-            grid.appendChild(card);
-        });
-    }
-
-    // --- SEVGİ OYUNU (HIZLI VE DİNAMİK) ---
-    const barFill = document.getElementById('love-bar-fill');
-    const loveMsg = document.getElementById('message-display');
-    const loveSide = document.getElementById('loveSideContent');
-    let loveVal = 0, loveDir = 1, loveRunning = false, loveRaf;
-
-    function resetLoveGame() {
-        loveVal = 0; loveRunning = false;
-        if(barFill) barFill.style.transform = `scaleY(0)`;
-        loveMsg.innerHTML = "Gül'üm seni ne kadar seviyor?<br>Ölçmek için BAS!";
-    }
-
-    function loveTick() {
-        if (!loveRunning) return;
-        loveVal += (2.8 + (loveVal / 35)) * loveDir; // Hızlı hareket
-        if (loveVal >= 100) { loveVal = 100; loveDir = -1; }
-        else if (loveVal <= 0) { loveVal = 0; loveDir = 1; }
-        if (barFill) barFill.style.transform = `scaleY(${loveVal / 100})`;
-        loveRaf = requestAnimationFrame(loveTick);
-    }
-
-    function loadLoveVideo() {
-        if (loveSide) {
-            loveSide.innerHTML = `
-                <div id="dynamic-quote" style="color:#ff69b4; font-weight:bold; height:40px; text-align:center; margin-bottom:10px;">Seni dünyalar kadar seviyorum Gülçin'im!</div>
-                <video src="media/gulobebek.mp4" autoplay muted loop playsinline style="width:100%; border-radius:15px; border:2px solid #ff69b4;"></video>
-            `;
-        }
-    }
-
-    // --- FLAPPY GÜLÇİN (YUVARLAK VE AKICI) ---
-    const canvas = document.getElementById('flappyCanvas');
-    let ctx, flappy = { running: false, pipes: [] };
-    const birdImg = new Image(); birdImg.src = 'media/flappy_gulcin.png';
-
-    function resizeFlappy() {
-        if (!canvas) return;
-        canvas.width = canvas.parentElement.clientWidth || 320;
-        canvas.height = 480;
-        ctx = canvas.getContext('2d');
-    }
-
-    function resetFlappy() {
-        flappy = { y: 240, vy: 0, g: 0.35, score: 0, running: false, pipes: [], timer: 0 };
-        drawFlappy();
-    }
-
-    function drawFlappy() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // Yuvarlak Gülçin Simgesi
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(65, flappy.y + 15, 25, 0, Math.PI * 2);
-        ctx.clip();
-        if(birdImg.complete) ctx.drawImage(birdImg, 40, flappy.y - 10, 50, 50);
-        else { ctx.fillStyle = "#ff69b4"; ctx.fill(); }
-        ctx.restore();
-        ctx.strokeStyle = "#ff69b4"; ctx.lineWidth = 2; ctx.stroke();
-
-        flappy.pipes.forEach(p => {
-            ctx.fillStyle = "#4ade80";
-            ctx.fillRect(p.x, 0, 50, p.top);
-            ctx.fillRect(p.x, p.top + 160, 50, canvas.height);
-        });
-
-        ctx.fillStyle = "white"; ctx.font = "bold 20px Arial";
-        ctx.fillText("Puan: " + flappy.score, 20, 40);
-        if(!flappy.running) ctx.fillText("Başlamak için dokun Gül'üm", canvas.width/2 - 100, canvas.height/2);
-    }
-
-    function flappyTick() {
-        if (!flappy.running) return;
-        flappy.vy += flappy.g;
-        flappy.y += flappy.vy;
-        flappy.timer++;
-        if (flappy.timer % 90 === 0) flappy.pipes.push({ x: canvas.width, top: Math.random() * (canvas.height - 250) + 50 });
-        flappy.pipes.forEach(p => {
-            p.x -= 3;
-            if (65+20 > p.x && 45 < p.x+50 && (flappy.y < p.top || flappy.y+30 > p.top+160)) flappy.running = false;
-            if (p.x === 50) flappy.score++;
-        });
-        flappy.pipes = flappy.pipes.filter(p => p.x > -60);
-        if (flappy.y > canvas.height || flappy.y < 0) flappy.running = false;
-        drawFlappy();
-        if (flappy.running) requestAnimationFrame(flappyTick);
-    }
-
-    // --- MERKEZİ GİRİŞ KONTROLÜ (CLICK + TOUCH) ---
-    const handleAction = (e) => {
-        if (e.target.closest('button') || e.target.closest('aside')) return;
-        
-        // Sevgi Oyunu Kontrolü
-        if (document.getElementById('lovePanel').style.display === 'block') {
-            if (!loveRunning) {
-                loveRunning = true; loveTick();
-                loveMsg.innerText = "DURDUR!";
-            } else {
-                loveRunning = false; cancelAnimationFrame(loveRaf);
-                const score = Math.floor(loveVal);
-                loveMsg.innerHTML = `<span style="font-size:1.5rem">%${score} Aşk</span><br>Muhammet seni çok seviyor!`;
-                const dq = document.getElementById('dynamic-quote');
-                if(dq) dq.innerText = `%${score} - Gül'üm benim, sen Muhammet'in her şeyisin!`;
-                createConfetti();
-            }
-        }
-        // Flappy Kontrolü
-        if (document.getElementById('flappyPanel').style.display === 'block') {
-            if (!flappy.running) { resetFlappy(); flappy.running = true; flappyTick(); }
-            else { flappy.vy = -6; }
-        }
-    };
-
-    window.addEventListener('mousedown', handleAction);
-    window.addEventListener('touchstart', (e) => { handleAction(e); }, { passive: false });
-
-    function createConfetti() {
-        for (let i = 0; i < 30; i++) {
-            const c = document.createElement('div');
-            c.style.cssText = `position:fixed; left:50%; top:50%; width:10px; height:10px; background:#ff69b4; border-radius:50%; z-index:999;`;
-            document.body.appendChild(c);
-            const a = Math.random()*Math.PI*2, d = Math.random()*100;
-            c.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${Math.cos(a)*d}vw,${Math.sin(a)*d}vh)`,opacity:0}], 1500).onfinish = () => c.remove();
-        }
-    }
-
-    showPanel('home');
-
-    window.addEventListener('load', () => {
-    // --- VERİ SETİ ---
-    const captions = [
-        "Gülüşün cennetten bir parça Gül'üm", "Muhammet seni her şeyden çok seviyor",
-        "Her anımız bir hazine Gülçin'im", "Dünyanın en güzel eşine...",
-        "Kalbimin tek sahibi sensin", "Sonsuza kadar el ele...",
-        "Gül yüzlüm, canım eşim", "Hayat seninle güzel",
-        "İyiki benimsin birtanem", "Mucizemsin Gülçin",
-        "Seninle her gün yeni bir bahar", "Aşkımız hiç bitmesin",
-        "Dünyamın ışığı sensin", "Can parçam Gül'üm",
-        "Ömrümün en güzel hikayesi", "Seni seviyorum!"
-    ];
-
-    const media = [];
-    for(let i=1; i<=16; i++) {
-        media.push({ src: `media/${i}.jpeg`, text: captions[i-1], type: 'image' });
-    }
-    media.push({ src: 'media/gulobebek.mp4', text: "Kurban olurum senin her haline!", type: 'video' });
-
-    let currentSlide = 0;
-
-    // --- PANEL YÖNETİMİ ---
-    function showPanel(id) {
-        document.querySelectorAll('.main > div, #panel > div').forEach(p => p.style.display = 'none');
-        const target = document.getElementById(id + 'Panel');
-        if (target) {
-            target.style.display = 'block';
-            if (id === 'gallery') buildGallery();
-            if (id === 'surprise') updateSlide();
-        }
-    }
-
-    // Buton Bağlantıları (Hem PC Hem Mobil)
-    const setupButtons = () => {
-        document.querySelectorAll('[data-target]').forEach(btn => {
-            btn.addEventListener('click', () => showPanel(btn.getAttribute('data-target')));
-        });
-        
-        document.getElementById('btnSurprise')?.addEventListener('click', () => showPanel('surprise'));
-        document.getElementById('closeSurprise')?.addEventListener('click', () => showPanel('home'));
-        
-        document.getElementById('nextBtn')?.addEventListener('click', () => {
-            currentSlide = (currentSlide + 1) % media.length;
-            updateSlide();
-        });
-
-        document.getElementById('prevBtn')?.addEventListener('click', () => {
-            currentSlide = (currentSlide - 1 + media.length) % media.length;
-            updateSlide();
-        });
-    };
-
-    // --- SLAYT GÜNCELLEME ---
-    function updateSlide() {
-        const img = document.getElementById('slideImage');
-        const video = document.getElementById('slideVideo');
-        const cap = document.getElementById('slideCaption');
-        const item = media[currentSlide];
+    // --- SLAYTSHOW MANTIĞI ---
+    function updateSlideshow() {
+        const item = mediaItems[currentIdx];
+        const img = document.getElementById('mainImage');
+        const vid = document.getElementById('mainVideo');
+        const cap = document.getElementById('mediaCaption');
 
         if(item.type === 'video') {
             img.style.display = 'none';
-            video.style.display = 'block';
-            video.src = item.src;
+            vid.style.display = 'block';
+            vid.src = item.src;
+            vid.play();
         } else {
-            video.style.display = 'none';
+            vid.style.display = 'none';
+            vid.pause();
             img.style.display = 'block';
             img.src = item.src;
         }
         cap.innerText = item.text;
     }
 
-    // --- GALERİ OLUŞTURMA ---
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        currentIdx = (currentIdx + 1) % mediaItems.length;
+        updateSlideshow();
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        currentIdx = (currentIdx - 1 + mediaItems.length) % mediaItems.length;
+        updateSlideshow();
+    });
+
+    document.getElementById('closeBtn').addEventListener('click', () => showPanel('home'));
+
+    // --- GALERİ MANTIĞI ---
     function buildGallery() {
         const grid = document.getElementById('galleryGrid');
-        if(!grid) return;
         grid.innerHTML = '';
-        media.forEach((item, index) => {
+        mediaItems.forEach((item, i) => {
             const div = document.createElement('div');
-            div.style.cssText = "border-radius:10px; overflow:hidden; border:1px solid #ff69b4; cursor:pointer;";
-            div.innerHTML = item.type === 'image' 
-                ? `<img src="${item.src}" style="width:100%; height:100px; object-fit:cover;">`
-                : `<div style="height:100px; background:#333; display:flex; align-items:center; justify-content:center;">🎥</div>`;
-            div.onclick = () => { currentSlide = index; showPanel('surprise'); };
+            div.className = 'grid-item';
+            div.innerHTML = item.type === 'video' ? '<div style="background:#333;height:100%;display:flex;align-items:center;justify-content:center;">🎥</div>' : `<img src="${item.src}">`;
+            div.addEventListener('click', () => {
+                currentIdx = i;
+                showPanel('surprise');
+                updateSlideshow();
+            });
             grid.appendChild(div);
         });
     }
 
-    setupButtons();
-    showPanel('home');
+    // --- SEVGİ ÖLÇER (HIZLI OYUN) ---
+    let loveVal = 0, isPlaying = false, loveRaf;
+    const fill = document.getElementById('meterFill');
+    const status = document.getElementById('loveStatus');
+
+    function runMeter() {
+        if(!isPlaying) return;
+        loveVal += 3.5;
+        if(loveVal > 100) loveVal = 0;
+        fill.style.height = loveVal + '%';
+        loveRaf = requestAnimationFrame(runMeter);
+    }
+
+    window.addEventListener('pointerdown', (e) => {
+        if(!document.getElementById('lovePanel').classList.contains('active')) return;
+        if(e.target.closest('.sidebar')) return;
+
+        if(!isPlaying) {
+            isPlaying = true;
+            status.innerText = "DURDURMAK İÇİN BAS!";
+            runMeter();
+        } else {
+            isPlaying = false;
+            cancelAnimationFrame(loveRaf);
+            status.innerHTML = `<span style="font-size:1.5rem; color:#ff69b4;">%${Math.floor(loveVal)} AŞK</span><br>Muhammet sana deli oluyor!`;
+        }
+    });
+
+    // --- FLAPPY GÜLÇİN (YUVARLAK SİMGE) ---
+    const canvas = document.getElementById('flappyCanvas');
+    const ctx = canvas.getContext('2d');
+    const birdImg = new Image(); birdImg.src = 'media/flappy_gulcin.png';
+    let bird = { y: 200, v: 0, g: 0.4 }, pipes = [], score = 0, flappyActive = false;
+
+    function initFlappy() {
+        canvas.width = 320; canvas.height = 480;
+        bird = { y: 200, v: 0, g: 0.4 }; pipes = []; score = 0; flappyActive = true;
+        animateFlappy();
+    }
+
+    function animateFlappy() {
+        if(!flappyActive) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        bird.v += bird.g; bird.y += bird.v;
+        
+        // Yuvarlak Gülçin
+        ctx.save();
+        ctx.beginPath(); ctx.arc(60, bird.y, 25, 0, Math.PI*2); ctx.clip();
+        if(birdImg.complete) ctx.drawImage(birdImg, 35, bird.y-25, 50, 50);
+        else { ctx.fillStyle = "pink"; ctx.fill(); }
+        ctx.restore();
+
+        if(pipes.length === 0 || pipes[pipes.length-1].x < 180) {
+            pipes.push({ x: 320, h: Math.random()*200+50 });
+        }
+
+        pipes.forEach((p, i) => {
+            p.x -= 2.5;
+            ctx.fillStyle = "#4ade80";
+            ctx.fillRect(p.x, 0, 50, p.h);
+            ctx.fillRect(p.x, p.h + 150, 50, canvas.height);
+
+            if(p.x < 85 && p.x > 15 && (bird.y < p.h || bird.y > p.h + 150)) flappyActive = false;
+            if(p.x === 60) score++;
+        });
+        pipes = pipes.filter(p => p.x > -50);
+
+        ctx.fillStyle = "white"; ctx.font = "20px Poppins"; ctx.fillText("Puan: " + score, 20, 40);
+        if(bird.y > 480 || bird.y < 0) flappyActive = false;
+
+        if(flappyActive) requestAnimationFrame(animateFlappy);
+        else ctx.fillText("YANDIN! Dokun ve Başla", 50, 240);
+    }
+
+    canvas.addEventListener('pointerdown', () => {
+        if(!flappyActive) initFlappy();
+        else bird.v = -7;
+    });
+
     document.body.classList.remove("not-loaded");
 });
