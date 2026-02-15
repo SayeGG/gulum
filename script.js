@@ -5,36 +5,35 @@ window.addEventListener('load', () => {
         const f = document.createElement('div');
         f.className = 'firefly';
         f.style.left = Math.random()*100+'vw';
-        f.style.animationDuration = (Math.random()*10+5)+'s';
+        f.style.animationDuration = (Math.random()*8+5)+'s';
         f.style.animationDelay = Math.random()*5+'s';
         fBox.appendChild(f);
     }
 
-    // 2. Medya Verileri (Hepsini Ekledim)
+    // 2. Medya Verileri (16 Foto + Video)
     const mediaItems = [];
     for(let i=1; i<=16; i++) {
-        mediaItems.push({ src: `media/${i}.jpeg`, text: `Anı #${i}: Seni her şeyden çok seviyorum Gül'üm.` });
+        mediaItems.push({ src: `media/${i}.jpeg`, text: `Seni her halinle çok seviyorum Gül'üm.` });
     }
-    mediaItems.push({ src: 'media/gulobebek.mp4', text: "Senin o hallerine kurban olurum!", type: 'video' });
+    mediaItems.push({ src: 'media/gulobebek.mp4', text: "Canım karım, her şeyim!", type: 'video' });
 
     const loveQuotes = [
-        "Dünyanın en güzel gülen kadınına...",
-        "Kalbimin her atışı senin için Gülçin.",
-        "Seninle hayat bir bayram tadında.",
-        "İyiki benim eşimsin, iyiki varsın.",
-        "Ömrümün sonuna kadar sadece sen.",
-        "Sen benim en güzel duamsın.",
-        "Gözlerine bakınca dünyayı unutuyorum."
+        "Sen benim en güzel manzaramsın.",
+        "Kalbimin tek sahibi Gülçin'im.",
+        "İyiki benimsin, iyiki eşimsin.",
+        "Dünyanın en güzel gülen kadını.",
+        "Sana her gün yeniden aşık oluyorum.",
+        "Ömrümün en güzel hikayesi seninle.",
+        "Gülüşüne kurban olduğum..."
     ];
 
     let currentIdx = 0;
 
-    // 3. Panel Yönetimi
+    // 3. Panel Geçişleri
     function showPanel(id) {
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById(id + 'Panel').classList.add('active');
         if(id === 'gallery') buildGallery();
-        if(id === 'flappy') initFlappy();
     }
 
     document.querySelectorAll('[data-panel]').forEach(btn => {
@@ -45,7 +44,7 @@ window.addEventListener('load', () => {
         currentIdx = 0; showPanel('surprise'); updateSlideshow();
     };
 
-    // 4. Slayt Sistemi
+    // 4. Slayt Gösterisi
     function updateSlideshow() {
         const item = mediaItems[currentIdx];
         const img = document.getElementById('mainImage');
@@ -63,7 +62,7 @@ window.addEventListener('load', () => {
     document.getElementById('prevBtn').onclick = () => { currentIdx = (currentIdx-1+mediaItems.length)%mediaItems.length; updateSlideshow(); };
     document.getElementById('closeBtn').onclick = () => showPanel('home');
 
-    // 5. Galeri
+    // 5. Galeri Oluşturma
     function buildGallery() {
         const grid = document.getElementById('galleryGrid');
         grid.innerHTML = '';
@@ -76,7 +75,7 @@ window.addEventListener('load', () => {
         });
     }
 
-    // 6. Sevgi Ölçer + Sözler
+    // 6. Sevgi Ölçer
     let loveVal = 0, isPlaying = false, raf;
     const fill = document.getElementById('meterFill');
     const status = document.getElementById('loveStatus');
@@ -84,7 +83,7 @@ window.addEventListener('load', () => {
 
     function runMeter() {
         if(!isPlaying) return;
-        loveVal += 4; if(loveVal > 100) loveVal = 0;
+        loveVal += 4.5; if(loveVal > 100) loveVal = 0;
         fill.style.height = loveVal + '%';
         raf = requestAnimationFrame(runMeter);
     }
@@ -104,43 +103,47 @@ window.addEventListener('load', () => {
         }
     });
 
-    // 7. Flappy Gülçin (Fixlendi)
+    // 7. Flappy Gülçin (Kesin Tamir)
     const canvas = document.getElementById('flappyCanvas');
     const ctx = canvas.getContext('2d');
-    let b, p, s, active = false;
+    let b = {y:200, v:0}, pipes = [], score = 0, gameActive = false;
 
     function initFlappy() {
-        canvas.width = 320; canvas.height = 400;
-        b = { y: 200, v: 0 }; p = []; s = 0; active = true;
+        canvas.width = 300; canvas.height = 400;
+        b = {y:200, v:0}; pipes = []; score = 0; gameActive = true;
         flappyLoop();
     }
 
     function flappyLoop() {
-        if(!active) return;
-        ctx.clearRect(0,0,320,400);
+        if(!gameActive) return;
+        ctx.clearRect(0,0,300,400);
         b.v += 0.25; b.y += b.v;
-        ctx.fillStyle = "pink"; ctx.beginPath(); ctx.arc(50, b.y, 15, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "pink"; ctx.beginPath(); ctx.arc(50, b.y, 12, 0, Math.PI*2); ctx.fill();
 
-        if(p.length === 0 || p[p.length-1].x < 150) p.push({ x: 320, h: Math.random()*150+50 });
-        p.forEach((pipe, i) => {
-            pipe.x -= 2;
+        if(pipes.length === 0 || pipes[pipes.length-1].x < 150) {
+            pipes.push({ x: 300, h: Math.random()*150+50 });
+        }
+
+        pipes.forEach(p => {
+            p.x -= 2;
             ctx.fillStyle = "#555";
-            ctx.fillRect(pipe.x, 0, 40, pipe.h);
-            ctx.fillRect(pipe.x, pipe.h+100, 40, 400);
-            if(pipe.x < 65 && pipe.x > 15 && (b.y < pipe.h || b.y > pipe.h+100)) active = false;
-            if(pipe.x === 50) s++;
+            ctx.fillRect(p.x, 0, 40, p.h);
+            ctx.fillRect(p.x, p.h+100, 40, 400);
+            if(p.x < 62 && p.x > 38 && (b.y < p.h || b.y > p.h+100)) gameActive = false;
+            if(p.x === 50) score++;
         });
-        p = p.filter(x => x.x > -40);
-        ctx.fillStyle = "white"; ctx.fillText("Puan: "+s, 10, 20);
-        if(b.y > 400 || b.y < 0) active = false;
-        if(active) requestAnimationFrame(flappyLoop);
-        else ctx.fillText("YANDIN! TIKLA", 120, 200);
+        pipes = pipes.filter(p => p.x > -40);
+        ctx.fillStyle = "white"; ctx.fillText("Puan: "+score, 10, 20);
+        if(b.y > 400 || b.y < 0) gameActive = false;
+        
+        if(gameActive) requestAnimationFrame(flappyLoop);
+        else { ctx.fillStyle = "white"; ctx.fillText("YANDIN! DOKUN VE BAŞLA", 80, 200); }
     }
 
-    canvas.onpointerdown = (e) => { 
+    canvas.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        if(!active) initFlappy(); else b.v = -5; 
-    };
+        if(!gameActive) initFlappy(); else b.v = -5;
+    });
 
     document.body.classList.remove("not-loaded");
 });
