@@ -1,38 +1,39 @@
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background: #000; color: white; font-family: 'Poppins', sans-serif; overflow: hidden; height: 100vh; }
+body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-.anime-bg { position: fixed; inset: 0; background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e); z-index: -1; }
+/* Anime Arka Plan */
+.anime-stars { position: fixed; inset: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'), radial-gradient(circle at bottom, #1b2735, #090a0f); z-index: -1; animation: bgMove 20s linear infinite; }
+@keyframes bgMove { from {background-position: 0 0;} to {background-position: 100px 100px;} }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: -1; }
 
-.app-wrapper { display: flex; height: 100vh; }
-.nav-bar { width: 120px; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 10px; padding: 10px; border-right: 1px solid #333; }
-.menu-btn { padding: 10px; background: #222; border: none; color: #fff; border-radius: 8px; font-size: 0.7rem; cursor: pointer; }
-.menu-btn.active { background: #ff4d94; }
+.app { display: flex; flex-direction: column; height: 100vh; }
 
-.main-screen { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-.tab-content { display: none; width: 100%; text-align: center; padding: 20px; }
-.tab-content.active { display: block; }
+/* Navbar */
+.navbar { display: flex; justify-content: space-around; background: rgba(0,0,0,0.8); padding: 15px; border-bottom: 1px solid #333; z-index: 100; }
+.nav-item { background: none; border: none; font-size: 1.5rem; color: #555; cursor: pointer; transition: 0.3s; }
+.nav-item.active { color: #ff4d94; transform: scale(1.2); }
 
-.glow-text { color: #ff4d94; text-shadow: 0 0 10px #ff4d94; margin-bottom: 10px; }
+/* İçerik Alanı */
+.viewport { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.tab { display: none; width: 100%; height: 100%; padding: 20px; flex-direction: column; align-items: center; justify-content: center; }
+.tab.active { display: flex; animation: slideIn 0.4s ease-out; }
 
-/* Medya Alanı */
-.media-box { max-width: 300px; margin: 0 auto; }
-.media-box img, .media-box video { width: 100%; border-radius: 10px; border: 2px solid #ff4d94; aspect-ratio: 1/1; object-fit: cover; }
-.slide-ctrl { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
-.slide-ctrl button { padding: 8px 15px; border-radius: 20px; border: none; background: #ff4d94; color: white; }
+/* Slayt Boyutları */
+.media-window { width: 250px; height: 250px; border: 3px solid #ff4d94; border-radius: 20px; overflow: hidden; background: #000; box-shadow: 0 0 20px rgba(255,77,148,0.3); }
+.media-window img, .media-window video { width: 100%; height: 100%; object-fit: cover; }
+.nav-controls { margin-top: 20px; display: flex; gap: 20px; }
+.nav-controls button { width: 50px; height: 50px; border-radius: 50%; border: none; background: #333; color: white; cursor: pointer; }
+.nav-controls .pink { background: #ff4d94; box-shadow: 0 5px 15px rgba(255,77,148,0.4); }
 
-/* Ölçer Yan Yana */
-.love-container { display: flex; align-items: center; justify-content: center; gap: 15px; }
-.video-part { width: 140px; height: 220px; border: 2px solid #ff4d94; border-radius: 10px; overflow: hidden; position: relative; }
-.video-part video { width: 100%; height: 100%; object-fit: cover; }
-.popup-msg { position: absolute; top: 10px; left: 5%; width: 90%; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 4px; border-radius: 4px; opacity: 0; transition: 0.3s; }
-.bar-outer { width: 35px; height: 180px; background: #222; border-radius: 20px; position: relative; overflow: hidden; border: 1px solid #444; }
-#barInner { position: absolute; bottom: 0; width: 100%; background: #ff4d94; height: 0%; }
+/* Sevgi Ölçer Yan Yana */
+.love-split { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.love-video { width: 140px; height: 240px; border: 2px solid #ff4d94; border-radius: 15px; overflow: hidden; position: relative; }
+.love-video video { width: 100%; height: 100%; object-fit: cover; }
+.bubble { position: absolute; top: 10px; width: 90%; left: 5%; background: rgba(0,0,0,0.8); font-size: 0.7rem; padding: 5px; border-radius: 8px; opacity: 0; transition: 0.3s; }
+.meter-track { width: 40px; height: 200px; background: #111; border: 2px solid #333; border-radius: 20px; position: relative; overflow: hidden; }
+#meterFill { position: absolute; bottom: 0; width: 100%; background: #ff4d94; height: 0%; }
 
 /* Oyun */
-#gameCanvas { background: rgba(255,255,255,0.05); border-radius: 10px; max-width: 100%; }
+#flappyCvs { background: rgba(0,0,0,0.4); border: 2px solid #333; border-radius: 15px; max-width: 90%; max-height: 70%; }
 
-@media (max-width: 768px) {
-    .app-wrapper { flex-direction: column; }
-    .nav-bar { width: 100%; flex-direction: row; height: auto; overflow-x: auto; }
-    .menu-btn { white-space: nowrap; }
-}
+@keyframes slideIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
