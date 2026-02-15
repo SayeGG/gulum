@@ -194,4 +194,95 @@ window.addEventListener('load', () => {
     }
 
     showPanel('home');
+
+    window.addEventListener('load', () => {
+    // --- VERİ SETİ ---
+    const captions = [
+        "Gülüşün cennetten bir parça Gül'üm", "Muhammet seni her şeyden çok seviyor",
+        "Her anımız bir hazine Gülçin'im", "Dünyanın en güzel eşine...",
+        "Kalbimin tek sahibi sensin", "Sonsuza kadar el ele...",
+        "Gül yüzlüm, canım eşim", "Hayat seninle güzel",
+        "İyiki benimsin birtanem", "Mucizemsin Gülçin",
+        "Seninle her gün yeni bir bahar", "Aşkımız hiç bitmesin",
+        "Dünyamın ışığı sensin", "Can parçam Gül'üm",
+        "Ömrümün en güzel hikayesi", "Seni seviyorum!"
+    ];
+
+    const media = [];
+    for(let i=1; i<=16; i++) {
+        media.push({ src: `media/${i}.jpeg`, text: captions[i-1], type: 'image' });
+    }
+    media.push({ src: 'media/gulobebek.mp4', text: "Kurban olurum senin her haline!", type: 'video' });
+
+    let currentSlide = 0;
+
+    // --- PANEL YÖNETİMİ ---
+    function showPanel(id) {
+        document.querySelectorAll('.main > div, #panel > div').forEach(p => p.style.display = 'none');
+        const target = document.getElementById(id + 'Panel');
+        if (target) {
+            target.style.display = 'block';
+            if (id === 'gallery') buildGallery();
+            if (id === 'surprise') updateSlide();
+        }
+    }
+
+    // Buton Bağlantıları (Hem PC Hem Mobil)
+    const setupButtons = () => {
+        document.querySelectorAll('[data-target]').forEach(btn => {
+            btn.addEventListener('click', () => showPanel(btn.getAttribute('data-target')));
+        });
+        
+        document.getElementById('btnSurprise')?.addEventListener('click', () => showPanel('surprise'));
+        document.getElementById('closeSurprise')?.addEventListener('click', () => showPanel('home'));
+        
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % media.length;
+            updateSlide();
+        });
+
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + media.length) % media.length;
+            updateSlide();
+        });
+    };
+
+    // --- SLAYT GÜNCELLEME ---
+    function updateSlide() {
+        const img = document.getElementById('slideImage');
+        const video = document.getElementById('slideVideo');
+        const cap = document.getElementById('slideCaption');
+        const item = media[currentSlide];
+
+        if(item.type === 'video') {
+            img.style.display = 'none';
+            video.style.display = 'block';
+            video.src = item.src;
+        } else {
+            video.style.display = 'none';
+            img.style.display = 'block';
+            img.src = item.src;
+        }
+        cap.innerText = item.text;
+    }
+
+    // --- GALERİ OLUŞTURMA ---
+    function buildGallery() {
+        const grid = document.getElementById('galleryGrid');
+        if(!grid) return;
+        grid.innerHTML = '';
+        media.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.style.cssText = "border-radius:10px; overflow:hidden; border:1px solid #ff69b4; cursor:pointer;";
+            div.innerHTML = item.type === 'image' 
+                ? `<img src="${item.src}" style="width:100%; height:100px; object-fit:cover;">`
+                : `<div style="height:100px; background:#333; display:flex; align-items:center; justify-content:center;">🎥</div>`;
+            div.onclick = () => { currentSlide = index; showPanel('surprise'); };
+            grid.appendChild(div);
+        });
+    }
+
+    setupButtons();
+    showPanel('home');
+    document.body.classList.remove("not-loaded");
 });
