@@ -1,20 +1,17 @@
-// Service Worker Kaydı (PWA Desteği)
+// Service Worker Kaydı
 if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.protocol.startsWith('http')) {
-    navigator.serviceWorker.register('sw.js').catch(err => {
-        console.log('Service Worker kaydı başarısız:', err);
-    });
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW hatası:', err));
 }
 
 window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.body.classList.remove("not-loaded");
-    }, 600);
+    // Sayfa yükleme efekti
+    setTimeout(() => document.body.classList.remove("not-loaded"), 600);
 
-    // Ateşböceği oluşturma
-    const firefliesContainer = document.querySelector('.fireflies');
     const isMobile = window.innerWidth < 768;
-    const fireflyCount = isMobile ? 8 : 25;
 
+    // --- Görsel Efektler ---
+    const firefliesContainer = document.querySelector('.fireflies');
+    const fireflyCount = isMobile ? 8 : 25;
     for (let i = 0; i < fireflyCount; i++) {
         const firefly = document.createElement('div');
         firefly.classList.add('firefly');
@@ -22,39 +19,10 @@ window.addEventListener('load', () => {
         firefly.style.top = Math.random() * 100 + '%';
         firefly.style.animationDuration = (Math.random() * 4 + 4) + 's, ' + (Math.random() * 1.5 + 0.8) + 's';
         firefly.style.animationDelay = Math.random() * 3 + 's';
-        firefliesContainer.appendChild(firefly);
+        firefliesContainer?.appendChild(firefly);
     }
 
-    const emojis = ['❤️', '💖', '💘', '💕', '💓', '💗', '💞', '💟', '😍', '😘'];
-
-    function createMoonEmoji() {
-        const emoji = document.createElement('div');
-        emoji.classList.add('moon-emoji');
-        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-        const tx = (Math.random() * 12 - 10) + 'vmin';
-        const ty = (Math.random() * 12 - 2) + 'vmin';
-        emoji.style.setProperty('--tx', tx);
-        emoji.style.setProperty('--ty', ty);
-        document.body.appendChild(emoji);
-        setTimeout(() => emoji.remove(), 1500);
-    }
-
-    function createHeartStar() {
-        const star = document.createElement('div');
-        star.classList.add('heart-star');
-        star.style.left = (Math.random() * 50 + 50) + '%';
-        star.style.top = (Math.random() * 50) + '%';
-        star.style.animationDuration = (Math.random() * 0.8 + 1.2) + 's';
-        document.body.appendChild(star);
-        setTimeout(() => star.remove(), 2000);
-    }
-
-    if (!isMobile) {
-        setInterval(createMoonEmoji, 1000);
-        setInterval(createHeartStar, 1500);
-    }
-
-    // Medya Galerisi
+    // --- Medya Galerisi Ayarları ---
     const mediaContainer = document.getElementById('media-container');
     const mediaImage = document.getElementById('media-image');
     const mediaVideo = document.getElementById('media-video');
@@ -62,30 +30,20 @@ window.addEventListener('load', () => {
     const showMediaBtn = document.getElementById('show-media');
 
     const mediaFiles = [
-        { type: 'image', src: 'media/1.jpeg', name: '1' },
-        { type: 'image', src: 'media/2.jpeg', name: '2' },
-        { type: 'image', src: 'media/3.jpeg', name: '3' },
-        { type: 'image', src: 'media/4.jpeg', name: '4' },
-        { type: 'image', src: 'media/5.jpeg', name: '5' },
-        { type: 'image', src: 'media/6.jpeg', name: '6' },
-        { type: 'image', src: 'media/7.jpeg', name: '7' },
-        { type: 'image', src: 'media/8.jpeg', name: '8' },
-        { type: 'image', src: 'media/9.jpeg', name: '9' },
-        { type: 'image', src: 'media/10.jpeg', name: '10' },
-        { type: 'image', src: 'media/11.jpeg', name: '11' },
-        { type: 'image', src: 'media/12.jpeg', name: '12' },
-        { type: 'image', src: 'media/13.jpeg', name: '13' },
-        { type: 'image', src: 'media/14.jpeg', name: '14' },
-        { type: 'image', src: 'media/15.jpeg', name: '15' },
-        { type: 'image', src: 'media/gulo.jpg', name: 'Gül' },
-        { type: 'video', src: 'media/gulobebek.mp4', name: 'Video' }
+        { type: 'image', src: 'media/1.jpeg' }, { type: 'image', src: 'media/2.jpeg' },
+        { type: 'image', src: 'media/3.jpeg' }, { type: 'image', src: 'media/4.jpeg' },
+        { type: 'image', src: 'media/5.jpeg' }, { type: 'image', src: 'media/6.jpeg' },
+        { type: 'image', src: 'media/7.jpeg' }, { type: 'image', src: 'media/8.jpeg' },
+        { type: 'image', src: 'media/9.jpeg' }, { type: 'image', src: 'media/10.jpeg' },
+        { type: 'image', src: 'media/11.jpeg' }, { type: 'image', src: 'media/12.jpeg' },
+        { type: 'image', src: 'media/13.jpeg' }, { type: 'image', src: 'media/14.jpeg' },
+        { type: 'image', src: 'media/15.jpeg' }, { type: 'image', src: 'media/gulo.jpg' },
+        { type: 'video', src: 'media/gulobebek.mp4' }
     ];
 
-    let currentMediaIndex = 0;
-
     function showMedia(index) {
-        if (index < 0 || index >= mediaFiles.length) return;
         const media = mediaFiles[index];
+        if (!media) return;
         mediaImage.style.display = 'none';
         mediaVideo.style.display = 'none';
         if (media.type === 'image') {
@@ -94,34 +52,50 @@ window.addEventListener('load', () => {
         } else {
             mediaVideo.src = media.src;
             mediaVideo.style.display = 'block';
+            mediaVideo.play().catch(() => {});
         }
-        currentMediaIndex = index;
     }
 
-    if (showMediaBtn) {
-        showMediaBtn.addEventListener('click', () => {
-            mediaContainer.classList.add('active');
-            showMedia(0);
-        });
-    }
+    showMediaBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mediaContainer.classList.add('active');
+        showMedia(0);
+    });
 
-    mediaClose.addEventListener('click', () => {
+    mediaClose?.addEventListener('click', (e) => {
+        e.stopPropagation();
         mediaContainer.classList.remove('active');
         mediaVideo.pause();
     });
 
-    // Sevgi Barı Oyunu
+    // --- Sürpriz Modal ---
+    const surpriseModal = document.getElementById('surprise-modal');
+    const surpriseOpenBtn = document.getElementById('surprise-open');
+    const surpriseCloseBtn = document.getElementById('surprise-close');
+    const SURPRISE_KEY = 'sevgi_bari_seen_surprise';
+
+    if (!localStorage.getItem(SURPRISE_KEY)) {
+        setTimeout(() => { if(surpriseModal) surpriseModal.style.display = 'flex'; }, 700);
+    }
+
+    surpriseOpenBtn?.addEventListener('click', () => {
+        if(surpriseModal) surpriseModal.style.display = 'none';
+        localStorage.setItem(SURPRISE_KEY, '1');
+        createConfetti();
+    });
+
+    surpriseCloseBtn?.addEventListener('click', () => {
+        if(surpriseModal) surpriseModal.style.display = 'none';
+    });
+
+    // --- Sevgi Barı Oyunu ---
     const loveBarFill = document.getElementById('love-bar-fill');
     const recordMarker = document.getElementById('record-marker');
     const messageDisplay = document.getElementById('message-display');
     const attemptsDisplay = document.getElementById('attempts-count');
 
-    let currentLevel = 0;
-    let direction = 1;
-    let isPlaying = false;
-    let animationId;
-    let gameOver = false;
-    let attempts = 9999;
+    let currentLevel = 0, direction = 1, isPlaying = false, animationId, lastTime = 0;
+    let attempts = parseInt(localStorage.getItem('Sevgi Barı Denemeleri')) || 9999;
     attemptsDisplay.innerText = attempts;
 
     function gameLoop(timestamp) {
@@ -129,68 +103,61 @@ window.addEventListener('load', () => {
         if (!lastTime) lastTime = timestamp;
         const deltaTime = timestamp - lastTime;
         lastTime = timestamp;
-        const timeScale = deltaTime / 16.67;
+        
+        let speed = (0.8 + (currentLevel / 100)) * (deltaTime / 16);
+        currentLevel += speed * direction;
 
-        let baseSpeed = 0.9;
-        let ramp = (currentLevel / 70) * 1.2;
-        let finalSpeed = (baseSpeed + ramp) * timeScale * 0.75;
+        if (currentLevel >= 100) { currentLevel = 100; direction = -1; }
+        else if (currentLevel <= 0) { currentLevel = 0; direction = 1; }
 
-        currentLevel += finalSpeed * direction;
-
-        if (currentLevel >= 100) { direction = -1; }
-        else if (currentLevel <= 0) { direction = 1; }
-
-        loveBarFill.style.transform = `scaleY(${currentLevel / 100})`;
+        if(loveBarFill) loveBarFill.style.transform = `scaleY(${currentLevel / 100})`;
         animationId = requestAnimationFrame(gameLoop);
     }
 
-    function stopGame(e) {
-        // Eğer tıklanan yer bir buton ise oyunu durdurma (butonun kendi işlevi çalışsın)
-        if (e && e.target.tagName === 'BUTTON') return;
-        if (e && e.cancelable) e.preventDefault();
-        if (gameOver) return;
+    function handleInput(e) {
+        // Tıklanan şey bir buton veya kapatma simgesi ise oyunu tetikleme
+        if (e.target.closest('button') || e.target.closest('#media-close') || e.target.closest('.sidebar')) return;
+        
+        // Mobilde çift tıklamayı ve sayfa kaymasını engelle
+        if (e.cancelable) e.preventDefault();
 
         if (!isPlaying) {
-            isPlaying = true;
-            lastTime = 0;
-            messageDisplay.innerText = "Durdurmak için bas!";
-            animationId = requestAnimationFrame(gameLoop);
+            if (attempts > 0) {
+                isPlaying = true;
+                lastTime = 0;
+                messageDisplay.innerText = "Durdurmak için dokun!";
+                animationId = requestAnimationFrame(gameLoop);
+            }
         } else {
             isPlaying = false;
             cancelAnimationFrame(animationId);
             attempts--;
+            localStorage.setItem('Sevgi Barı Denemeleri', attempts);
             attemptsDisplay.innerText = attempts;
             const score = Math.floor(currentLevel);
-            messageDisplay.innerText = `Skor: ${score}%`;
-            if(score > 90) createConfetti();
+            messageDisplay.innerText = `Skor: %${score}`;
+            if(score > 80) createConfetti();
+            
+            // Sağ taraftaki video alanını güncelle
+            const loveSide = document.getElementById('loveSideContent');
+            if(loveSide) {
+                loveSide.innerHTML = `<div style="text-align:center"><b>Skorun: %${score}</b><br><video src="media/gulobebek.mp4" autoplay muted loop style="width:100%; border-radius:10px; margin-top:10px;"></video></div>`;
+            }
         }
     }
 
-    let lastTime = 0;
-    // HEM MOUSE HEM TOUCH DESTEĞİ
-    document.addEventListener('pointerdown', stopGame, { passive: false });
-    document.addEventListener('keydown', (e) => { if (e.code === 'Space') stopGame(e); });
+    // ÇAKIŞMAYI ÖNLEYEN DİNLEYİCİLER
+    // Sadece pointerdown kullanıyoruz, click ve touchstart'ı iptal ediyoruz
+    document.addEventListener('pointerdown', handleInput, { passive: false });
+    document.addEventListener('keydown', (e) => { if(e.code === 'Space') handleInput(e); });
 
     function createConfetti() {
-        const count = isMobile ? 15 : 40;
-        for (let i = 0; i < count; i++) {
-            const confetti = document.createElement('div');
-            confetti.style.position = 'fixed';
-            confetti.style.left = '50%';
-            confetti.style.top = '50%';
-            confetti.style.width = '2vmin';
-            confetti.style.height = '2vmin';
-            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            confetti.style.borderRadius = '50%';
-            confetti.style.zIndex = '1000';
-            document.body.appendChild(confetti);
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 20 + 10;
-            confetti.animate([
-                { transform: 'translate(0,0) scale(1)', opacity: 1 },
-                { transform: `translate(${Math.cos(angle)*velocity}vmin, ${Math.sin(angle)*velocity}vmin) scale(0)`, opacity: 0 }
-            ], { duration: 1000, fill: 'forwards' });
-            setTimeout(() => confetti.remove(), 1000);
+        for (let i = 0; i < 30; i++) {
+            const c = document.createElement('div');
+            c.style.cssText = `position:fixed;left:50%;top:50%;width:8px;height:8px;background:hsl(${Math.random()*360},100%,50%);z-index:9999;border-radius:50%;pointer-events:none;`;
+            document.body.appendChild(c);
+            const a = Math.random()*Math.PI*2, v = Math.random()*20+10;
+            c.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${Math.cos(a)*v}vmax,${Math.sin(a)*v}vmax)`,opacity:0}], {duration:1000, easing:'ease-out'}).onfinish = () => c.remove();
         }
     }
 });
