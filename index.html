@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="tr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ff69b4">
+  <title>Canım Gülçin — Sürpriz</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="not-loaded">
+  <div class="app">
+    <div class="card">
+      <aside class="sidebar">
+        <div class="brand">Canım Gülçin 💖</div>
+        <button class="btn primary" id="btnSurprise">Sürprizi Başlat</button>
+        <button class="btn" data-target="gallery">Galeri</button>
+        <button class="btn" data-target="love">Sevgi Oyunu</button>
+        <button class="btn" data-target="flappy">Flappy</button>
+        <div style="flex:1"></div>
+        <div class="muted">© 2026</div>
+      </aside>
+
+      <main class="main">
+        <h1 class="title">Sana özel bir sürpriz</h1>
+        <p class="subtitle">Seçeneklerden birini seç — Galeri, Oyun veya Sürpriz</p>
+
+        <section id="panel" class="panel">
+          <div id="homePanel">Hoş geldin — menüden bir bölüm seç.</div>
+
+          <div id="galleryPanel" style="display:none">
+            <div class="grid" id="galleryGrid"></div>
+          </div>
+
+          <div id="lovePanel" style="display:none">
+            <h3>Sevgi Barı Oyunu</h3>
+            <div class="attempts-display">Kalan Hak: <span id="attempts-count">9999</span></div>
+            <div class="love-panel-grid" style="margin-top:8px;display:flex;gap:12px;align-items:flex-start">
+              <div class="love-left" style="min-width:220px">
+                <div class="bar-holder">
+                  <div class="love-bar-wrapper">
+                    <div id="love-bar-fill" class="love-bar-fill"></div>
+                    <div id="record-marker" class="record-marker" aria-hidden="true"></div>
+                  </div>
+                </div>
+                <div id="message-display" class="message-display">Başlamak için tıkla veya Space.</div>
+              </div>
+              <div class="love-side" id="loveSide">
+                <div id="loveSideContent"
+                  style="border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);padding:10px;min-height:180px;display:flex;align-items:center;justify-content:center;flex-direction:column">
+                  <div style="font-weight:700;font-size:1.1rem">Muhammet → Gülçin</div>
+                  <div id="loveSidePhrase" style="color:var(--muted);margin-top:6px">Canım eşim, bu sayfa sana özel.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="flappyPanel" style="display:none">
+            <canvas id="flappyCanvas" width="320" height="480"></canvas>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+              <label for="flappyDifficulty" style="color:var(--muted);font-weight:600">Zorluk:</label>
+              <select id="flappyDifficulty" style="padding:6px;border-radius:6px">
+                <option value="easy">Kolay</option>
+                <option value="medium">Orta</option>
+                <option value="hard">Zor</option>
+              </select>
+              <div style="flex:1"></div>
+              <div style="display:flex;gap:8px"><button class="btn" id="flappyStart">Başla</button><button class="btn"
+                  id="flappyStop">Dur</button></div>
+            </div>
+            <div id="flappyInfo" style="color:var(--muted);margin-top:8px">Space veya tıklama ile zıpla.</div>
+          </div>
+
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Slide modal -->
+  <div class="modal" id="slideModal" style="display:none">
+    <div class="frame">
+      <img id="slideImage" src="" alt="">
+      <div class="overlayText" id="slideCaption"></div>
+      <div class="phrase" id="slidePhrase"></div>
+      <div class="controls">
+        <button class="btn" id="prevSlide">Önceki</button>
+        <button class="btn primary" id="closeSlide">Kapat</button>
+        <button class="btn" id="nextSlide">Sonraki</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media and Surprise modals expected by script.js -->
+  <div id="media-container" class="modal" style="display:none">
+    <div class="frame">
+      <img id="media-image" src="" style="display:none;max-width:80vw;max-height:60vh;border-radius:8px" />
+      <video id="media-video" controls style="display:none;max-width:80vw;max-height:60vh;border-radius:8px"></video>
+      <div style="margin-top:8px"><button id="media-close" class="btn alt">Kapat</button></div>
+    </div>
+  </div>
+
+  <div id="surprise-modal" class="modal" style="display:none">
+    <div class="frame" style="text-align:center">
+      <h2>Bir Sürpriz Var 🌸</h2>
+      <p style="color:var(--muted)">Bu sürprizi açmak ister misin?</p>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+        <button id="surprise-open" class="btn primary">Sürprizi Aç</button>
+        <button id="surprise-close" class="btn alt">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fireflies" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none"></div>
+
+  <script>
+    // Localhost: temiz çalışma için kayıtlı service worker'ları ve cache'leri kaldır
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => { });
+      }
+      if ('caches' in window) {
+        caches.keys().then(keys => keys.forEach(k => caches.delete(k))).catch(() => { });
+      }
+      console.log('Local cleanup: service workers & caches cleared (localhost).');
+    }
+  </script>
+  <script src="script.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
