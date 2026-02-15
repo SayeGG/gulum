@@ -1,81 +1,74 @@
 window.addEventListener('load', () => {
-    // Sayfa yükleme animasyonunu kaldır
-    setTimeout(() => document.body.classList.remove("not-loaded"), 400);
+    // Sayfa yükleme animasyonu (Gül simgesi)
+    setTimeout(() => document.body.classList.remove("not-loaded"), 500);
 
-    // --- ÖZEL VERİLER ---
+    // --- ÖZEL VERİLER VE SÖZLER ---
     const romantikSozler = [
-        "Seninle her saniye bir ömre bedel Gül'üm...", "Gözlerin dünyamı aydınlatan en parlak yıldız.",
-        "Muhammet sana her gün yeniden aşık oluyor.", "Canım eşim, kalbimin tek sahibi Gülçin'im.",
-        "Seninle yaşlanmak hayattaki en büyük şansım.", "Gülüşün cennetten bir köşe gibi birtanem.",
-        "Dünyam seninle daha renkli, daha anlamlı.", "Her anımda, her nefesimde sen varsın.",
-        "Ruhumun eşi, hayatımın anlamı iyiki varsın.", "Mucizelere inanma sebebim senin varlığın.",
-        "Sana olan sevgim kelimelere sığmayacak kadar büyük.", "Hayat yolculuğumdaki en güzel durak sensin.",
-        "Sen benim her şeyimsin, dünyalar güzeli sevgilim.", "Gül yüzlüm, kalbinin güzelliği yüzüne yansımış.",
-        "Sonsuza kadar sadece sen ve ben, el ele...", "Kalbimin ritmi senin adınla anlam kazanıyor.",
-        "Sen benim başıma gelen en güzel şeysin."
+        "Gülüşün dünyamı aydınlatıyor Gül'üm...", "Her anımda sen varsın canım eşim.",
+        "Seninle hayat bir başka güzel Gülçin'im.", "Muhammet sana her gün yeniden aşık oluyor.",
+        "Kalbimin tek sahibi, bir tanem.", "Gözlerin en güzel manzaram benim.",
+        "Seninle yaşlanmak tek hayalim Gül'üm.", "İyiki benimsin, iyiki eşimsin.",
+        "Ruhumun eşi, kalbimin neşesi...", "Gül yüzlüm, her şeyim sensin.",
+        "Ömrümün en güzel hikayesi seninle başladı.", "Sen benim sol yanım, can parçamsın.",
+        "Sonsuza kadar sadece seninle Gülçin'im.", "Hayat seninle anlam kazanıyor birtanem.",
+        "Sana olan sevgim hiç bitmeyecek Gül'üm.", "Dünyanın en güzel kalbi sende...",
+        "Gülçin & Muhammet: Sonsuz Aşk ❤️"
     ];
 
-    // Galeri Verileri (16 Resim + 1 Video)
     const mediaFiles = [];
     for(let i=1; i<=16; i++) { 
-        mediaFiles.push({ type: 'image', src: `media/${i}.jpeg`, text: romantikSozler[i-1] || "Seni çok seviyorum!" }); 
+        mediaFiles.push({ src: `media/${i}.jpeg`, text: romantikSozler[i-1] }); 
     }
-    mediaFiles.push({ type: 'video', src: 'media/gulobebek.mp4', text: "Gül'üm senin o güzel hallerine kurban olurum!" });
+    mediaFiles.push({ src: 'media/gulobebek.mp4', text: "Senin o güzel hallerine kurban olurum Gül'üm!", type: 'video' });
 
-    // --- PANEL VE BUTON YÖNETİMİ (Windows + Mobil Uyumlu) ---
+    // --- PANEL SİSTEMİ (TIKLAMA SORUNUNU ÇÖZEN KISIM) ---
     function showPanel(id) {
-        // Tüm panelleri gizle
+        // Tüm panelleri kapat (main içindekiler dahil)
         document.querySelectorAll('.main > div, #panel > div').forEach(p => p.style.display = 'none');
         
         const target = document.getElementById(id + 'Panel') || document.getElementById(id);
         if (target) {
             target.style.display = 'block';
             if (id === 'gallery') buildGallery();
-            if (id === 'love') { loadLoveContent(); resetLoveGame(); }
+            if (id === 'love') { resetLoveGame(); loadLoveVideo(); }
             if (id === 'flappy') { resizeFlappy(); resetFlappy(); }
         }
     }
 
-    // Butonlara tıklama ve dokunma desteği
-    document.querySelectorAll('[data-target], .sidebar .btn').forEach(btn => {
-        const action = (e) => {
-            e.preventDefault();
-            const targetId = btn.getAttribute('data-target') || btn.id.replace('btn', '').toLowerCase();
-            if(targetId) showPanel(targetId);
+    // Buton Dinleyicileri (Hem PC hem Mobil için en garantisi)
+    document.querySelectorAll('[data-target], #btnSurprise').forEach(btn => {
+        const handleBtn = (e) => {
+            e.preventDefault(); e.stopPropagation();
+            const target = btn.getAttribute('data-target') || 'gallery';
+            showPanel(target);
+            if(btn.id === 'btnSurprise') createConfetti();
         };
-        btn.addEventListener('click', action);
-        btn.addEventListener('touchstart', action, { passive: false });
+        btn.addEventListener('click', handleBtn);
+        btn.addEventListener('touchstart', handleBtn, { passive: false });
     });
 
-    // Sürprizi Başlat butonu
-    document.getElementById('btnSurprise')?.addEventListener('click', () => {
-        showPanel('gallery');
-        createConfetti();
-    });
-
-    // --- GALERİ OLUŞTURMA ---
+    // --- GALERİ VE SÜRPRİZ SEKMESİ ---
     function buildGallery() {
-        const grid = document.getElementById('galleryGrid');
-        if(!grid) return;
-        grid.innerHTML = '';
-        grid.style.cssText = "display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px; padding:20px;";
+        const gal = document.getElementById('galleryPanel') || document.getElementById('gallery');
+        if(!gal) return;
+        gal.innerHTML = '<h2 class="playfair" style="text-align:center; color:#ff69b4; margin-bottom:20px;">Gülçin\'im İçin Anılarımız</h2><div class="g-grid"></div>';
+        const grid = gal.querySelector('.g-grid');
+        grid.style.cssText = "display:grid; grid-template-columns:1fr; gap:25px; padding:10px;";
 
         mediaFiles.forEach(file => {
             const card = document.createElement('div');
-            card.style.cssText = "background:#111; border-radius:20px; overflow:hidden; border:1px solid #ff69b4; box-shadow: 0 10px 20px rgba(0,0,0,0.4);";
+            card.style.cssText = "background:#111; border-radius:15px; overflow:hidden; border:1px solid #ff69b4;";
             
-            if(file.type === 'image') {
-                card.innerHTML = `<img src="${file.src}" style="width:100%; display:block; aspect-ratio:1/1; object-fit:cover;">
-                                  <p style="padding:15px; color:#ffc0cb; text-align:center; font-style:italic;">${file.text}</p>`;
+            if(file.type === 'video') {
+                card.innerHTML = `<video src="${file.src}" controls style="width:100%;"></video><p style="padding:15px; color:#ffc0cb; text-align:center;">${file.text}</p>`;
             } else {
-                card.innerHTML = `<video src="${file.src}" controls style="width:100%; aspect-ratio:1/1; object-fit:cover;"></video>
-                                  <p style="padding:15px; color:#ffc0cb; text-align:center; font-weight:bold;">${file.text}</p>`;
+                card.innerHTML = `<img src="${file.src}" style="width:100%; display:block;"><p style="padding:15px; color:#ffc0cb; text-align:center; font-style:italic;">${file.text}</p>`;
             }
             grid.appendChild(card);
         });
     }
 
-    // --- SEVGİ BARI (HIZLI VE HEYECANLI) ---
+    // --- SEVGİ OYUNU (HIZLI VE DİNAMİK) ---
     const barFill = document.getElementById('love-bar-fill');
     const loveMsg = document.getElementById('message-display');
     const loveSide = document.getElementById('loveSideContent');
@@ -84,32 +77,31 @@ window.addEventListener('load', () => {
     function resetLoveGame() {
         loveVal = 0; loveRunning = false;
         if(barFill) barFill.style.transform = `scaleY(0)`;
-        loveMsg.innerHTML = "Gül'üm, Muhammet seni ne kadar seviyor?<br>Ölçmek için BAS!";
+        loveMsg.innerHTML = "Gül'üm seni ne kadar seviyor?<br>Ölçmek için BAS!";
     }
 
     function loveTick() {
         if (!loveRunning) return;
-        loveVal += (3 + (loveVal / 25)) * loveDir; // Hızlı oyun hissi
+        loveVal += (2.8 + (loveVal / 35)) * loveDir; // Hızlı hareket
         if (loveVal >= 100) { loveVal = 100; loveDir = -1; }
         else if (loveVal <= 0) { loveVal = 0; loveDir = 1; }
         if (barFill) barFill.style.transform = `scaleY(${loveVal / 100})`;
         loveRaf = requestAnimationFrame(loveTick);
     }
 
-    function loadLoveContent() {
+    function loadLoveVideo() {
         if (loveSide) {
             loveSide.innerHTML = `
-                <div style="color:#ff69b4; font-weight:bold; font-size:1.2rem; margin-bottom:10px; text-align:center;">Sana olan aşkım sonsuz!</div>
+                <div id="dynamic-quote" style="color:#ff69b4; font-weight:bold; height:40px; text-align:center; margin-bottom:10px;">Seni dünyalar kadar seviyorum Gülçin'im!</div>
                 <video src="media/gulobebek.mp4" autoplay muted loop playsinline style="width:100%; border-radius:15px; border:2px solid #ff69b4;"></video>
             `;
         }
     }
 
-    // --- FLAPPY GÜLÇİN (YUVARLAK KARAKTER) ---
+    // --- FLAPPY GÜLÇİN (YUVARLAK VE AKICI) ---
     const canvas = document.getElementById('flappyCanvas');
     let ctx, flappy = { running: false, pipes: [] };
-    const birdImg = new Image(); 
-    birdImg.src = 'media/flappy_gulcin.png'; // Senin yüklediğin logo
+    const birdImg = new Image(); birdImg.src = 'media/flappy_gulcin.png';
 
     function resizeFlappy() {
         if (!canvas) return;
@@ -125,26 +117,16 @@ window.addEventListener('load', () => {
 
     function drawFlappy() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // --- YUVARLAK KARAKTER ---
+        // Yuvarlak Gülçin Simgesi
         ctx.save();
         ctx.beginPath();
-        // Gülçin'in yüzünü tam daire içine alıyoruz
         ctx.arc(65, flappy.y + 15, 25, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.clip(); // Resmi yuvarlak kes
-        if(birdImg.complete) {
-            ctx.drawImage(birdImg, 40, flappy.y - 10, 50, 50);
-        } else {
-            ctx.fillStyle = "#ff69b4"; ctx.fill();
-        }
+        ctx.clip();
+        if(birdImg.complete) ctx.drawImage(birdImg, 40, flappy.y - 10, 50, 50);
+        else { ctx.fillStyle = "#ff69b4"; ctx.fill(); }
         ctx.restore();
-        
-        // Dışına pembe halka
-        ctx.strokeStyle = "#ff69b4"; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.arc(65, flappy.y + 15, 26, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "#ff69b4"; ctx.lineWidth = 2; ctx.stroke();
 
-        // Borular (Pipes)
         flappy.pipes.forEach(p => {
             ctx.fillStyle = "#4ade80";
             ctx.fillRect(p.x, 0, 50, p.top);
@@ -152,11 +134,8 @@ window.addEventListener('load', () => {
         });
 
         ctx.fillStyle = "white"; ctx.font = "bold 20px Arial";
-        ctx.fillText("Skor: " + flappy.score, 15, 30);
-        if(!flappy.running) {
-            ctx.textAlign = "center";
-            ctx.fillText("Uçurmak için bas Gül'üm!", canvas.width/2, canvas.height/2);
-        }
+        ctx.fillText("Puan: " + flappy.score, 20, 40);
+        if(!flappy.running) ctx.fillText("Başlamak için dokun Gül'üm", canvas.width/2 - 100, canvas.height/2);
     }
 
     function flappyTick() {
@@ -164,9 +143,7 @@ window.addEventListener('load', () => {
         flappy.vy += flappy.g;
         flappy.y += flappy.vy;
         flappy.timer++;
-        if (flappy.timer % 90 === 0) {
-            flappy.pipes.push({ x: canvas.width, top: Math.random() * (canvas.height - 250) + 50 });
-        }
+        if (flappy.timer % 90 === 0) flappy.pipes.push({ x: canvas.width, top: Math.random() * (canvas.height - 250) + 50 });
         flappy.pipes.forEach(p => {
             p.x -= 3;
             if (65+20 > p.x && 45 < p.x+50 && (flappy.y < p.top || flappy.y+30 > p.top+160)) flappy.running = false;
@@ -178,39 +155,41 @@ window.addEventListener('load', () => {
         if (flappy.running) requestAnimationFrame(flappyTick);
     }
 
-    // --- MERKEZİ GİRİŞ (TOUCH + CLICK) ---
-    function handleAction(e) {
-        if (e.target.closest('.btn') || e.target.closest('aside')) return;
+    // --- MERKEZİ GİRİŞ KONTROLÜ (CLICK + TOUCH) ---
+    const handleAction = (e) => {
+        if (e.target.closest('button') || e.target.closest('aside')) return;
         
-        // Sevgi Barı İşlemi
-        if (document.getElementById('lovePanel')?.style.display === 'block') {
-            if (!loveRunning) { 
-                loveRunning = true; loveTick(); 
+        // Sevgi Oyunu Kontrolü
+        if (document.getElementById('lovePanel').style.display === 'block') {
+            if (!loveRunning) {
+                loveRunning = true; loveTick();
                 loveMsg.innerText = "DURDUR!";
             } else {
                 loveRunning = false; cancelAnimationFrame(loveRaf);
-                const s = Math.floor(loveVal);
-                loveMsg.innerHTML = `<span style="font-size:1.8rem; color:#ff69b4;">%${s} Aşk</span><br>${s > 90 ? 'Muhammet sana deli gibi aşık Gülçin!' : 'Seni çok seviyorum!'}`;
+                const score = Math.floor(loveVal);
+                loveMsg.innerHTML = `<span style="font-size:1.5rem">%${score} Aşk</span><br>Muhammet seni çok seviyor!`;
+                const dq = document.getElementById('dynamic-quote');
+                if(dq) dq.innerText = `%${score} - Gül'üm benim, sen Muhammet'in her şeyisin!`;
                 createConfetti();
             }
         }
-        // Flappy İşlemi
-        if (document.getElementById('flappyPanel')?.style.display === 'block') {
+        // Flappy Kontrolü
+        if (document.getElementById('flappyPanel').style.display === 'block') {
             if (!flappy.running) { resetFlappy(); flappy.running = true; flappyTick(); }
-            else { flappy.vy = -6.5; }
+            else { flappy.vy = -6; }
         }
-    }
+    };
 
-    window.addEventListener('pointerdown', handleAction);
-    window.addEventListener('keydown', (e) => { if(e.code === 'Space') handleAction(e); });
+    window.addEventListener('mousedown', handleAction);
+    window.addEventListener('touchstart', (e) => { handleAction(e); }, { passive: false });
 
     function createConfetti() {
         for (let i = 0; i < 30; i++) {
             const c = document.createElement('div');
-            c.style.cssText = `position:fixed; left:50%; top:50%; width:10px; height:10px; background:#ff69b4; border-radius:50%; z-index:9999;`;
+            c.style.cssText = `position:fixed; left:50%; top:50%; width:10px; height:10px; background:#ff69b4; border-radius:50%; z-index:999;`;
             document.body.appendChild(c);
-            const a = Math.random()*Math.PI*2, d = Math.random()*120;
-            c.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${Math.cos(a)*d}vw,${Math.sin(a)*d}vh)`,opacity:0}], 1200).onfinish = () => c.remove();
+            const a = Math.random()*Math.PI*2, d = Math.random()*100;
+            c.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${Math.cos(a)*d}vw,${Math.sin(a)*d}vh)`,opacity:0}], 1500).onfinish = () => c.remove();
         }
     }
 
