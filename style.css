@@ -3,48 +3,49 @@
 body { background: var(--dark); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; height: 100vh; }
 .playfair { font-family: 'Playfair Display', serif; color: var(--pink); }
 
+/* Arka Plan */
 .night-bg { position: fixed; inset: 0; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); z-index: -2; }
-.moon { position: fixed; top: 15px; right: 15px; font-size: 2rem; z-index: 10; }
+.moon { position: fixed; top: 15px; right: 15px; font-size: 1.8rem; z-index: 10; }
 .firefly { position: fixed; width: 3px; height: 3px; background: #ffffbb; border-radius: 50%; z-index: -1; animation: move linear infinite; }
 
+/* Layout */
 .app-container { display: flex; height: 100vh; position: relative; z-index: 1; }
-.sidebar { width: 240px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
-.nav-menu { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-.nav-btn { padding: 12px; border: none; border-radius: 10px; background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; text-align: left; font-weight: 600; }
+.sidebar { width: 220px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
+.brand { font-size: 1.2rem; font-weight: 700; color: var(--pink); margin-bottom: 20px; }
+.nav-menu { display: flex; flex-direction: column; gap: 10px; }
+.nav-btn { padding: 12px; border: none; border-radius: 8px; background: rgba(255,255,255,0.05); color: #ccc; cursor: pointer; text-align: left; }
 .nav-btn.primary { background: var(--pink); color: white; }
 
-.content-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 15px; overflow: hidden; }
+.content-area { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
 .panel { display: none; width: 100%; text-align: center; }
-.panel.active { display: block; animation: fadeIn 0.5s; }
+.panel.active { display: block; animation: fadeIn 0.4s; }
 
-/* SEVGİ ÖLÇER YAN YANA TASARIM */
-.love-layout { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 20px; width: 100%; }
-.video-side { width: 180px; height: 280px; border-radius: 15px; overflow: hidden; border: 2px solid var(--pink); position: relative; box-shadow: 0 0 15px var(--pink); }
-.video-side video { width: 100%; height: 100%; object-fit: cover; }
-.love-quote { position: absolute; top: 10px; left: 5px; right: 5px; background: rgba(0,0,0,0.6); padding: 5px; font-size: 0.75rem; border-radius: 5px; color: white; z-index: 2; opacity: 0; transition: 0.5s; }
+/* Sevgi Ölçer Mobil Uyumlu Yan Yana */
+.love-wrapper { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 15px; width: 100%; }
+.video-container { width: 160px; height: 260px; border-radius: 15px; border: 2px solid var(--pink); position: relative; overflow: hidden; background: #000; }
+.video-container video { width: 100%; height: 100%; object-fit: cover; }
+.love-quote { position: absolute; top: 0; left: 0; width: 100%; background: rgba(0,0,0,0.6); color: #ffc0cb; font-size: 0.75rem; padding: 10px; opacity: 0; transition: 0.5s; z-index: 5; }
 
-.meter-bg { width: 45px; height: 220px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 25px; position: relative; overflow: hidden; }
+.meter-bg { width: 40px; height: 200px; background: #1a1a1a; border: 2px solid var(--pink); border-radius: 20px; position: relative; overflow: hidden; }
 #meterFill { position: absolute; bottom: 0; width: 100%; background: var(--pink); height: 0%; }
 
-/* DİĞERLERİ */
+/* Galeri ve Slayt */
+.grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 70vh; overflow-y: auto; padding: 10px; }
+.grid-item { aspect-ratio: 1/1; border-radius: 8px; overflow: hidden; border: 1px solid #222; }
+.grid-item img { width: 100%; height: 100%; object-fit: cover; }
 .media-frame { width: 280px; height: 280px; border: 3px solid var(--pink); border-radius: 20px; overflow: hidden; position: relative; margin: 0 auto; }
 .media-frame img, .media-frame video { width: 100%; height: 100%; object-fit: cover; }
-.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 8px; font-size: 0.8rem; }
-.grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 70vh; overflow-y: auto; }
-.grid-item { aspect-ratio: 1/1; border-radius: 8px; overflow: hidden; }
-.grid-item img { width: 100%; height: 100%; object-fit: cover; }
+.caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 10px; font-size: 0.8rem; }
 
-#flappyCanvas { background: rgba(0,0,0,0.5); border: 2px solid #333; border-radius: 10px; max-width: 90vw; max-height: 60vh; }
+/* Flappy */
+#flappyCanvas { background: rgba(0,0,0,0.3); border: 2px solid #333; border-radius: 10px; max-width: 90vw; max-height: 50vh; }
 
-/* MOBİL ÖZEL */
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
     .sidebar { width: 100%; height: auto; flex-direction: row; padding: 10px; }
-    .nav-menu { flex-direction: row; overflow-x: auto; margin-top: 0; width: 100%; }
-    .nav-btn { white-space: nowrap; font-size: 0.8rem; padding: 8px 12px; }
-    .brand { display: none; }
-    .love-layout { gap: 15px; }
-    .video-side { width: 140px; height: 220px; }
+    .nav-menu { flex-direction: row; overflow-x: auto; width: 100%; }
+    .nav-btn { white-space: nowrap; font-size: 0.75rem; padding: 8px 12px; }
+    .brand, .moon { display: none; }
 }
-@keyframes move { from {transform: translateY(100vh);} to {transform: translateY(-10vh);} }
 @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+@keyframes move { from {transform: translateY(100vh);} to {transform: translateY(-10vh);} }
